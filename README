@@ -1,1 +1,25 @@
+Peano Extra Tools
+====================
+
+
 Additional tools to work with, develop, and debug swift 2 in peano4.
+
+Contents
+-----------------
+
+
+benchmarks:
+    
+    benchmark (i.e. example) specific things, scripts, etc
+
+cmdlinetools:
+
+    tools to print data/info on screen
+
+plotting
+
+    various plotting scripts
+
+swiftsim
+
+    scripts etc to be used with swift, not peano-swift.
