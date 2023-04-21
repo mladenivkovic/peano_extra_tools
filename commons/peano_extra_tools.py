@@ -90,7 +90,7 @@ def get_particle_data_from_time_or_vtufile(pvdfile=None):
 
     else:
         # We have a valid vtu file name. Read that data in now and return it.
-        reader = ParticleVTUReader(vtufile=vtufile, verbose=False)
+        reader = ParticleVTUReader(vtufile=arg, verbose=False)
 
     partData = reader.load()
 
