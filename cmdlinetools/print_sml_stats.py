@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 # Print some smoothing length stats to screen
+# Reads in .pvd file, then gets stats for all
+# vtu files tracked by the .pvd file
 
 
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
