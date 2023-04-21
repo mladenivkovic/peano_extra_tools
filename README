@@ -10,11 +10,20 @@ Contents
 
 benchmarks:
     
-    benchmark (i.e. example) specific things, scripts, etc
+    benchmark (i.e. example) specific things, scripts, etc.
+    Thinks like specialized initial conditions, specialized plotting
+    scripts, debugging scripts... Just specific to existing 
+    Peano4/Swift2 `benchmarks`.
 
 cmdlinetools:
 
     tools to print data/info on screen
+
+commons:
+    
+    a collection of functions commonly used by other scripts.
+    Intended to be imported (through symlinks in same directory
+    as main script), not to be executed on their own.
 
 plotting
 
