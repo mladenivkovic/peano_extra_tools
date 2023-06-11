@@ -20,7 +20,7 @@ except ImportError:
     quit()
 
 
-def _guess_pvdfilename():
+def guess_pvdfilename():
     """
     try and select the default pvdfile.
     """
@@ -28,7 +28,7 @@ def _guess_pvdfilename():
     if not os.path.exists(pvdfile):
         pvdfile = "particles.pvd"
     if not os.path.exists(pvdfile):
-        raise FileNotFoundError("Couldn't find default .pvd file.")
+        raise FileNotFoundError("Couldn't find default .pvd file. Provide manually?")
     return pvdfile
 
 
@@ -93,7 +93,7 @@ def get_particle_data_from_time_or_vtufile(pvdfile=None):
 
         # We have a valid time. Now read in the data now and return it.
         if pvdfile is None:
-            pvdfile = _guess_pvdfilename()
+            pvdfile = guess_pvdfilename()
 
         reader = ParticleVTUReader(snapshot_time=time, pvdfile=pvdfile, verbose=False)
 

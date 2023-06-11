@@ -7,9 +7,9 @@
 
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
 import numpy as np
+from peano_extra_tools import guess_pvdfilename
 
-pvdfile = "output/snapshots/particles.pvd"
-#  pvdfile = "particles.pvd"
+pvdfile = guess_pvdfilename()
 reader = ParticleVTUReader(pvdfile=pvdfile, snapshot_time=0.0, verbose=False)
 allfiles = reader.get_all_vtufiles()
 
