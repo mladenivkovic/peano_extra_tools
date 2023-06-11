@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-#================================================
+# ================================================
 #  Print all fields from a vtufile that you
 #  provide as a cmdline arg
-#================================================
+# ================================================
 
 import os, sys
 import vtuIO
@@ -23,4 +23,3 @@ vtufile = vtuIO.VTUIO(vtufilename, interpolation_backend="vtk")
 point_field_names = vtufile.get_point_field_names()
 
 print(point_field_names)
-

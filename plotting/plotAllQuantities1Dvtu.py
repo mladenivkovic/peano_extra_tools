@@ -8,10 +8,13 @@
 # <time> : snapshot time to plot
 
 import matplotlib
+
 #  matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 import numpy as np
-from peano4.toolbox.particles.postprocessing.ParticleVTUReader import _clean_attribute_string
+from peano4.toolbox.particles.postprocessing.ParticleVTUReader import (
+    _clean_attribute_string,
+)
 import peano_extra_tools as pet
 
 
@@ -29,7 +32,6 @@ else:
         print("    ", field)
 
 
-
 # Determine rows and columns
 nplots = len(point_field_names) - 1
 av_plot_per_dim = np.sqrt(nplots)
@@ -44,20 +46,19 @@ if nrows * ncols < nplots:
 
 scatterkwargs = {
     "marker": ".",
-    "s" : 2.0,
+    "s": 2.0,
     "zorder": 1,
     "alpha": 0.6,
-        }
+}
 
 
 coords = getattr(partData, coordiante_fieldname)
-x = coords[:,0]
+x = coords[:, 0]
 
 print("Read in coordinates of", x.shape[0], "particles")
 if x.shape[0] == 0:
     print("SOMETHING IS WRONG. I HAVE ZERO PARTICLES.")
     quit()
-
 
 
 sbp = 1  # subplot counter
@@ -74,7 +75,6 @@ for fieldname in point_field_names:
     plt.xlabel("x")
     plt.ylabel(attrname)
 
-
     # sanity checks
     nans = np.isnan(data)
     nnans = np.count_nonzero(nans)
@@ -86,7 +86,6 @@ for fieldname in point_field_names:
     if ninfs > 0:
         print("WARNIGN: FOUND", ninfs, "INFS IN ATTRIBUTE", attrname)
 
-
     # One dimensional quantity
     if len(data.shape) == 1:
         plt.scatter(x, data, **scatterkwargs)
@@ -94,7 +93,9 @@ for fieldname in point_field_names:
     # Multidimensional quantity
     elif len(data.shape) == 2:
         for index in range(data.shape[1]):
-            plt.scatter(x, data[:,index], label="index {0:d}".format(index), **scatterkwargs)
+            plt.scatter(
+                x, data[:, index], label="index {0:d}".format(index), **scatterkwargs
+            )
         plt.legend()
 
     else:

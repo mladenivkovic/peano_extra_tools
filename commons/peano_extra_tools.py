@@ -1,19 +1,24 @@
 #!/usr/bin/env python3
 
-#======================================================
+# ======================================================
 # A collection of commonly used tools and functions
 # Intended to be imported, not to be run as-is.
-#======================================================
+# ======================================================
 
 import os
 import sys
 
 try:
     import peano4
-    from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
+    from peano4.toolbox.particles.postprocessing.ParticleVTUReader import (
+        ParticleVTUReader,
+    )
 except ImportError:
-    print("You need to have access to the peano4 python modules. Import has failed. Add it to your pythonpath?")
+    print(
+        "You need to have access to the peano4 python modules. Import has failed. Add it to your pythonpath?"
+    )
     quit()
+
 
 def _guess_pvdfilename():
     """
@@ -25,6 +30,7 @@ def _guess_pvdfilename():
     if not os.path.exists(pvdfile):
         raise FileNotFoundError("Couldn't find default .pvd file.")
     return pvdfile
+
 
 def check_is_valid_file(filename):
     """
@@ -72,14 +78,17 @@ def get_particle_data_from_time_or_vtufile(pvdfile=None):
         print("snapshot time to read in as a cmdline argument. You gave me nothing.")
         quit()
 
-
     has_time = False
     has_vtufile = check_is_valid_file(arg)
     if not has_vtufile:
         has_time, time = check_is_valid_time(arg)
         if not has_time:
             # I got neither the time nor a valid vtu file. Can't work like this.
-            print("argument '", arg, "' is neither a file I could find nor a valid snapshot time.")
+            print(
+                "argument '",
+                arg,
+                "' is neither a file I could find nor a valid snapshot time.",
+            )
             quit(1)
 
         # We have a valid time. Now read in the data now and return it.

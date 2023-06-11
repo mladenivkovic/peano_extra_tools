@@ -28,11 +28,11 @@
 import sys
 import os
 import matplotlib
+
 #  matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 import h5py
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
-
 
 
 # Parameters
@@ -54,11 +54,13 @@ else:
 # Get swift data
 # -----------------------------------
 
-swift_root = "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D-unequalMasses"
+swift_root = (
+    "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D-unequalMasses"
+)
 output_basename = "sodShock_"
 
 # Read the simulation data
-fname_swift = output_basename+("%04d.hdf5" % snap)
+fname_swift = output_basename + ("%04d.hdf5" % snap)
 fullpath_swift = os.path.join(swift_root, fname_swift)
 swiftsim = h5py.File(fullpath_swift, "r")
 boxSize = swiftsim["/Header"].attrs["BoxSize"][0]
@@ -90,7 +92,6 @@ except:
     plot_alpha_diff = False
 
 
-
 # Get Peanoswift data
 # -----------------------------------
 pvdfile = "output/snapshots/particles.pvd"
@@ -103,9 +104,9 @@ partData = reader.load()
 # show me what particle fields are stored
 partData.show_attribute_list()
 
-x = partData.x[:,0]
+x = partData.x[:, 0]
 #  y = partData.x[:,1]
-v = partData.v[:,0]
+v = partData.v[:, 0]
 u = partData.u
 #  S = partData.S # doesn't exist yet?
 P = partData.pressure
@@ -116,10 +117,10 @@ h = partData.smoothingLength
 print("xdata:")
 print("min", x.min(), "max", x.max())
 
-x_min = 0.
+x_min = 0.0
 x_max = boxSize
 if x.max() - x.min() > 1.1:
-    x_max = 2.
+    x_max = 2.0
 
 x += x_min
 
@@ -132,26 +133,26 @@ cols = 2
 
 peanokwargs = {
     "marker": ".",
-    "color" : "C0",
-    "s" : 4.0,
+    "color": "C0",
+    "s": 4.0,
     "zorder": 4,
     "alpha": 0.6,
-        }
+}
 
 swiftkwargs = {
     "marker": ".",
-    "color" : "C1",
-    "s" : 4.0,
+    "color": "C1",
+    "s": 4.0,
     "zorder": 2,
     "alpha": 0.6,
-        }
+}
 
 anakwargs = {
     "ls": "--",
     "color": "k",
     "alpha": 0.8,
     "lw": 1.2,
-        }
+}
 
 
 # Velocity profile --------------------------------
@@ -203,6 +204,7 @@ plt.ylabel("${\\rm{Internal~Energy}}~u$", labelpad=0)
 #  plt.xlim(-0.5, 0.5)
 #  plt.ylim(0.8, 2.2)
 
+print("Size of x", x.shape)
 
 # Mass profile --------------------------------
 plt.subplot(rows, cols, 5)

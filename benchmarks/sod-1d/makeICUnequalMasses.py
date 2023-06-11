@@ -137,7 +137,6 @@ grp.create_dataset("ParticleIDs", data=ids, dtype="L")
 
 file.close()
 
-x = coords[:,0]
+x = coords[:, 0]
 print("xdata:")
 print("min", x.min(), "max", x.max())
-

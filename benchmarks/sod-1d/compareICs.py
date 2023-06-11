@@ -2,6 +2,7 @@
 
 import sys
 import matplotlib
+
 #  matplotlib.use("Agg")
 from matplotlib import pyplot as plt
 import numpy as np
@@ -10,10 +11,10 @@ from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVT
 
 
 scatterkwargs = {
-        "s": 1.,
-        "alpha": 0.6,
-        "marker": ".",
-        }
+    "s": 1.0,
+    "alpha": 0.6,
+    "marker": ".",
+}
 
 
 # ----------------------
@@ -28,6 +29,7 @@ v_R = 0.0  # Velocity right state
 P_L = 1.0  # Pressure left state
 P_R = 0.1  # Pressure right state
 
+
 def original_ic(x, center, leftVal, rightVal):
     """
     Get array of original initial conditions
@@ -36,10 +38,6 @@ def original_ic(x, center, leftVal, rightVal):
     res[x < center] = leftVal
     res[x >= center] = rightVal
     return res
-
-
-
-
 
 
 # ----------------------
@@ -72,24 +70,21 @@ center = 0.5 * boxSize
 #  git = sim["Code"].attrs["Git Revision"].decode("utf-8")
 
 
-
-
-
-#-----------------------------
+# -----------------------------
 # Peano4 ICs
-#-----------------------------
+# -----------------------------
 
 #  pvdfile = "output/snapshots/particles.pvd"
 pvdfile = "particles.pvd"
-reader = ParticleVTUReader(pvdfile=pvdfile, snapshot_time=0., verbose=False)
+reader = ParticleVTUReader(pvdfile=pvdfile, snapshot_time=0.0, verbose=False)
 partData = reader.load()
 
 # show me what particle fields are stored
 #  partData.show_attribute_list()
 
-x = partData.x[:,0]
+x = partData.x[:, 0]
 #  y = partData.x[:,1]
-v = partData.v[:,0]
+v = partData.v[:, 0]
 u = partData.u
 #  S = partData.S # doesn't exist yet?
 P = partData.pressure
@@ -97,11 +92,9 @@ rho = partData.density
 mass = partData.mass
 
 
-
-
-#---------------------------------
+# ---------------------------------
 # Plotting
-#---------------------------------
+# ---------------------------------
 
 # Plot the interesting quantities
 plt.figure(figsize=(7, 7 / 1.6))
@@ -109,7 +102,7 @@ plt.figure(figsize=(7, 7 / 1.6))
 rows = 2
 cols = 3
 
-xIC = np.linspace(0., boxSize, 200)
+xIC = np.linspace(0.0, boxSize, 200)
 vIC = original_ic(xIC, center, v_L, v_R)
 rhoIC = original_ic(xIC, center, rho_L, rho_R)
 PIC = original_ic(xIC, center, P_L, P_R)
@@ -147,8 +140,8 @@ plt.ylabel("${\\rm{Pressure}}~P$", labelpad=0)
 
 # Internal energy profile -------------------------
 plt.subplot(rows, cols, 4)
-plt.scatter(x, u,  color="r", label="ICs Peano dump", **scatterkwargs)
-plt.scatter(xhdf5, uhdf5,  color="g", label="ICs in hdf5", **scatterkwargs)
+plt.scatter(x, u, color="r", label="ICs Peano dump", **scatterkwargs)
+plt.scatter(xhdf5, uhdf5, color="g", label="ICs in hdf5", **scatterkwargs)
 #  plt.plot(xIC, uIC, "--", color="k", alpha=0.8, lw=1.2)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Internal~Energy}}~u$", labelpad=0)
@@ -178,11 +171,6 @@ plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Density}}~\\rho$", labelpad=0)
 #  plt.xlim(-0.5, 0.5)
 #  plt.ylim(0.8, 2.2)
-
-
-
-
-
 
 
 plt.tight_layout()
