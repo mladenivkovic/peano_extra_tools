@@ -18,11 +18,12 @@ ids = partData.partid
 ids = ids.astype(int)
 ids = np.sort(ids)
 
-for i in range(ids.shape[0]-1):
-    n = ids[i+1]
+for i in range(ids.shape[0] - 1):
+    n = ids[i + 1]
     this = ids[i]
     while n - this != 1:
         this += 1
         print("Missing particle:", this)
 
-    if i == 500: break
+    if i == 500:
+        break

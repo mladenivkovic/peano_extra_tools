@@ -25,5 +25,3 @@ bp.sort()
 
 print("Boundary Particles:")
 print(bp)
-
-
