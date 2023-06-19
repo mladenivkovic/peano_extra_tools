@@ -54,8 +54,9 @@ else:
 # Get swift data
 # -----------------------------------
 
+#  "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D-unequalMasses"
 swift_root = (
-    "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D-unequalMasses"
+    "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D"
 )
 output_basename = "sodShock_"
 
@@ -137,6 +138,7 @@ peanokwargs = {
     "s": 4.0,
     "zorder": 4,
     "alpha": 0.6,
+    "label":"PeanoSwift"
 }
 
 swiftkwargs = {
@@ -145,6 +147,7 @@ swiftkwargs = {
     "s": 4.0,
     "zorder": 2,
     "alpha": 0.6,
+    "label":"Swift"
 }
 
 anakwargs = {
@@ -162,6 +165,7 @@ plt.scatter(x_swift, v_swift, **swiftkwargs)
 #  plt.plot(x_s, v_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Velocity}}~v_x$", labelpad=0)
+plt.legend()
 #  plt.xlim(-0.5, 0.5)
 #  plt.ylim(-0.1, 0.95)
 
@@ -174,8 +178,8 @@ plt.subplot(rows, cols, 2)
 #      plot([x_34, x_34], [-100, 100], color="k", alpha=0.5, ls="dashed", lw=1.2)
 #      ylim(0, 1)
 #  else:
-plt.scatter(x, rho, label="Peano", **peanokwargs)
-plt.scatter(x_swift, rho_swift, label="swift", **swiftkwargs)
+plt.scatter(x, rho, **peanokwargs)
+plt.scatter(x_swift, rho_swift, **swiftkwargs)
 #  plt.plot(x_s, rho_s, **anakwargs)
 plt.ylabel("${\\rm{Density}}~\\rho$", labelpad=0)
 plt.legend()
@@ -191,6 +195,7 @@ plt.scatter(x_swift, P_swift, **swiftkwargs)
 #  plt.plot(x_s, P_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Pressure}}~P$", labelpad=0)
+plt.legend()
 #  plt.xlim(-0.5, 0.5)
 #  plt.ylim(0.01, 1.1)
 
@@ -201,6 +206,7 @@ plt.scatter(x_swift, u_swift, **swiftkwargs)
 #  plt.plot(x_s, u_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Internal~Energy}}~u$", labelpad=0)
+plt.legend()
 #  plt.xlim(-0.5, 0.5)
 #  plt.ylim(0.8, 2.2)
 
@@ -213,6 +219,7 @@ plt.scatter(x_swift, m_swift, **swiftkwargs)
 #  plt.plot(x_s, m_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Masses}}~m$", labelpad=0)
+plt.legend()
 #  plt.ylim(0.05, 1.1)
 
 # Smoothing Length profile --------------------------------
@@ -222,6 +229,7 @@ plt.scatter(x_swift, h_swift, **swiftkwargs)
 #  plt.plot(x_s, h_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Smoothing Length}}~h$", labelpad=0)
+plt.legend()
 #  plt.ylim(0.05, 1.1)
 
 plt.show()

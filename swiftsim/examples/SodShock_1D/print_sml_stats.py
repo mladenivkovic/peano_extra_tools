@@ -35,6 +35,7 @@ def get_snapshot_list(snapshot_basename="sodShock", plot_all=True, snapnr=0):
 
 #  fname = sys.argv[1]
 snaplist = get_snapshot_list()
+h_max_overall = -1.
 
 for snap in snaplist:
     data = swiftsimio.load(snap)
@@ -45,3 +46,7 @@ for snap in snaplist:
             snap, h.min(), h.max(), np.mean(h)
         )
     )
+    h_max_overall = max(h_max_overall, h.max())
+
+print("Global max h:", h_max_overall)
+
