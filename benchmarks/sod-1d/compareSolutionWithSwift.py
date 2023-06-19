@@ -55,9 +55,7 @@ else:
 # -----------------------------------
 
 #  "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D-unequalMasses"
-swift_root = (
-    "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D"
-)
+swift_root = "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D"
 output_basename = "sodShock_"
 
 # Read the simulation data
@@ -138,7 +136,7 @@ peanokwargs = {
     "s": 4.0,
     "zorder": 4,
     "alpha": 0.6,
-    "label":"PeanoSwift"
+    "label": "PeanoSwift",
 }
 
 swiftkwargs = {
@@ -147,7 +145,7 @@ swiftkwargs = {
     "s": 4.0,
     "zorder": 2,
     "alpha": 0.6,
-    "label":"Swift"
+    "label": "Swift",
 }
 
 anakwargs = {

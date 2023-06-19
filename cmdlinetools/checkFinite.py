@@ -38,7 +38,6 @@ else:
     vtufilelist.sort()
 
 
-
 # get nr of particles in first file
 vtufile = vtufilelist[0]
 reader = ParticleVTUReader(vtufile=vtufile, verbose=False)
@@ -64,7 +63,14 @@ for vtufile in vtufilelist:
 
     print("Checking file {0} nparts = {1:d}".format(vtufile, nparts_this_file))
     if nparts_start_sim != nparts_this_file:
-        print("WARNING: THIS VTU FILE (", vtufile, ")HAS", nparts_this_file, "PARTICLES, EXPECTED", nparts_start_sim)
+        print(
+            "WARNING: THIS VTU FILE (",
+            vtufile,
+            ")HAS",
+            nparts_this_file,
+            "PARTICLES, EXPECTED",
+            nparts_start_sim,
+        )
         warn_npart += 1
 
     for fieldname in point_field_names:
@@ -88,9 +94,23 @@ for vtufile in vtufilelist:
 
         nparts = data.shape[0]
         if nparts != nparts_this_file:
-            print("WARNING: THIS FIELD (", attrname, ")HAS", nparts, "PARTICLES, EXPECTED", nparts_this_file)
+            print(
+                "WARNING: THIS FIELD (",
+                attrname,
+                ")HAS",
+                nparts,
+                "PARTICLES, EXPECTED",
+                nparts_this_file,
+            )
             warn_npart_file += 1
 
 
-
-print("Done. Found {0:d} warnings: {1:d} infs, {2:d} NaNs, and {3:d} wrong particle counts".format(warn_nan + warn_inf + warn_npart + warn_npart_file, warn_inf, warn_nan, warn_npart, + warn_npart_file))
+print(
+    "Done. Found {0:d} warnings: {1:d} infs, {2:d} NaNs, and {3:d} wrong particle counts".format(
+        warn_nan + warn_inf + warn_npart + warn_npart_file,
+        warn_inf,
+        warn_nan,
+        warn_npart,
+        +warn_npart_file,
+    )
+)
