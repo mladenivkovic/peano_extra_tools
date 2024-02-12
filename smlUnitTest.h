@@ -87,16 +87,23 @@ namespace smlUnitTest {
   template <typename IC>
   void runTest(IC ic){
 
-
+    // Talk to me
     std::cout << "Running '" << ic.name << "'\n";
 
+    // Set up
     std::list<hydroPart*> particleList = initParticles(ic);
 
+    if (ic.sampleSize <= 20) {
+      std::cerr << "IC sample size must be > 20, is=" << ic.sampleSize << std::endl;
+      std::abort();
+    }
+
+    // We could to this for all particles simultaneously, but I don't want to.
+    // Go particle by particle.
     for (int localParticleIndex = 10; localParticleIndex < ic.sampleSize - 10; localParticleIndex++){
 
       hydroPart *localParticle = getLocalParticle(particleList, localParticleIndex);
-      std::cout << localParticle->toString() << std::endl;
-
+      double h_solution = ic.sml_solution[localParticleIndex];
 
       int iteration = 0;
       while (iteration < hydroPart::getSmlMaxIterations() ){
@@ -111,9 +118,6 @@ namespace smlUnitTest {
           ::swift2::kernels::legacy::density_kernel(localParticle, activeParticle);
         }
 
-        // for (hydroPart* particle : particleList) {
-        //   swift2::kernels::legacy::hydro_update_smoothing_length_and_rerun_if_required(particle);
-        // }
         swift2::kernels::legacy::hydro_update_smoothing_length_and_rerun_if_required(localParticle);
 
 
@@ -125,6 +129,15 @@ namespace smlUnitTest {
         std::cout << localParticle->getSmoothingLengthIterCount() << std::endl;
       } else {
         std::cout << "Finished (converged) after " << iteration << " iterations" << std::endl;
+      }
+
+      double h = localParticle->getSmoothingLength();
+      if (std::abs(h/h_solution - 1.) > 1e-5) {
+        std::cout << "ERROR: Smoothing lengths don't agree. ";
+        std::cout << " Got: h=" << h << "; ";
+        std::cout << " Expect: h=" << h_solution << "; ";
+        std::cout << " Ratio: h=" << h/h_solution << "; ";
+        std::cout << " Error: h=" << std::abs(h/h_solution - 1.) << std::endl;
       }
 
 

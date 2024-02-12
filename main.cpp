@@ -7,5 +7,4 @@ int main(void){
 
   smlUnitTest::runTest(initialConditions::oneDim::IC1DUniform());
 
-
 }
