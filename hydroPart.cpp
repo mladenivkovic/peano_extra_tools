@@ -10,10 +10,10 @@
 tests::swift2::testSML1D::globaldata::hydroPart::hydroPart(tarch::la::Vector<Dimensions,double>  __debugX, tarch::la::Vector<Dimensions,double>  __debugH, tarch::la::Vector<Dimensions,double>  __x, tarch::la::Vector<Dimensions,double>  __cellH, double  __searchRadius, ParallelState  __ParallelState, MoveState  __MoveState, bool  __CellHasUpdatedParticle, double  __mass, tarch::la::Vector<Dimensions,double>  __v, tarch::la::Vector<Dimensions,double>  __a, double  __density, double  __pressure, double  __smoothingLength, double  __u, double  __uDot, tarch::la::Vector<Dimensions,double>  __v_full, double  __u_full, double  __wcount, double  __wcount_dh, double  __f, double  __hDot, double  __rho_dh, int  __smoothingLengthIterCount, bool  __hasNoNeighbours, bool  __isBoundaryParticle, bool  __smoothingLengthConverged, int  __partid, double  __balsara, double  __rot_v, double  __div_v, double  __v_sig_AV, double  __soundSpeed, DependencyChecksPeanoEventUsedBySwift  __dependencyChecksPeanoEventUsedBySwift, DependencyChecksAlgorithmStepLastUpdated  __dependencyChecksAlgorithmStepLastUpdated, int  __dependencyChecksAlgorithmStepUpdates[21], int  __dependencyChecksAlgorithmStepMaskOuts[21], DependencyChecksInitStepLastUpdated  __dependencyChecksInitStepLastUpdated, int  __dependencyChecksInitStepUpdates[0], int  __dependencyChecksInitStepMaskOuts[0]){
 #if PeanoDebug>0
 setDebugX( __debugX);
-#endif 
+#endif
 #if PeanoDebug>0
 setDebugH( __debugH);
-#endif 
+#endif
 setX( __x);
 setCellH( __cellH);
 setSearchRadius( __searchRadius);
@@ -47,25 +47,25 @@ setV_sig_AV( __v_sig_AV);
 setSoundSpeed( __soundSpeed);
 #if PeanoDebug > 0
 setDependencyChecksPeanoEventUsedBySwift( __dependencyChecksPeanoEventUsedBySwift);
-#endif 
+#endif
 #if PeanoDebug > 0
 setDependencyChecksAlgorithmStepLastUpdated( __dependencyChecksAlgorithmStepLastUpdated);
-#endif 
+#endif
 #if PeanoDebug > 0
 setDependencyChecksAlgorithmStepUpdates( __dependencyChecksAlgorithmStepUpdates);
-#endif 
+#endif
 #if PeanoDebug > 0
 setDependencyChecksAlgorithmStepMaskOuts( __dependencyChecksAlgorithmStepMaskOuts);
-#endif 
+#endif
 #if PeanoDebug > 0
 setDependencyChecksInitStepLastUpdated( __dependencyChecksInitStepLastUpdated);
-#endif 
+#endif
 #if PeanoDebug > 0
 setDependencyChecksInitStepUpdates( __dependencyChecksInitStepUpdates);
-#endif 
+#endif
 #if PeanoDebug > 0
 setDependencyChecksInitStepMaskOuts( __dependencyChecksInitStepMaskOuts);
-#endif 
+#endif
 }
 
 
@@ -73,10 +73,10 @@ setDependencyChecksInitStepMaskOuts( __dependencyChecksInitStepMaskOuts);
 tests::swift2::testSML1D::globaldata::hydroPart::hydroPart( const hydroPart& copy ) {
 #if PeanoDebug>0
   setDebugX( copy.getDebugX() );
-#endif 
+#endif
 #if PeanoDebug>0
   setDebugH( copy.getDebugH() );
-#endif 
+#endif
   setX( copy.getX() );
   setCellH( copy.getCellH() );
   setSearchRadius( copy.getSearchRadius() );
@@ -110,25 +110,25 @@ tests::swift2::testSML1D::globaldata::hydroPart::hydroPart( const hydroPart& cop
   setSoundSpeed( copy.getSoundSpeed() );
 #if PeanoDebug > 0
   setDependencyChecksPeanoEventUsedBySwift( copy.getDependencyChecksPeanoEventUsedBySwift() );
-#endif 
+#endif
 #if PeanoDebug > 0
   setDependencyChecksAlgorithmStepLastUpdated( copy.getDependencyChecksAlgorithmStepLastUpdated() );
-#endif 
+#endif
 #if PeanoDebug > 0
   setDependencyChecksAlgorithmStepUpdates( copy.getDependencyChecksAlgorithmStepUpdates() );
-#endif 
+#endif
 #if PeanoDebug > 0
   setDependencyChecksAlgorithmStepMaskOuts( copy.getDependencyChecksAlgorithmStepMaskOuts() );
-#endif 
+#endif
 #if PeanoDebug > 0
   setDependencyChecksInitStepLastUpdated( copy.getDependencyChecksInitStepLastUpdated() );
-#endif 
+#endif
 #if PeanoDebug > 0
   setDependencyChecksInitStepUpdates( copy.getDependencyChecksInitStepUpdates() );
-#endif 
+#endif
 #if PeanoDebug > 0
   setDependencyChecksInitStepMaskOuts( copy.getDependencyChecksInitStepMaskOuts() );
-#endif 
+#endif
 }
 
 
@@ -138,125 +138,125 @@ tests::swift2::testSML1D::globaldata::hydroPart::hydroPart( const hydroPart& cop
 std::string tests::swift2::testSML1D::globaldata::hydroPart::toString() const {
   std::ostringstream out;
   out << "(";
-#if PeanoDebug>0
-  out << "debugX=" << _debugX;
-#endif 
-#if PeanoDebug>0
-  out << ","; 
-  out << "debugH=" << _debugH;
-#endif 
-  out << ","; 
+// #if PeanoDebug>0
+//   out << "debugX=" << _debugX;
+// #endif
+// #if PeanoDebug>0
+//   out << ",";
+//   out << "debugH=" << _debugH;
+// #endif
+  // out << ",";
   out << "x=" << _x;
-  out << ","; 
-  out << "cellH=" << _cellH;
-  out << ","; 
+  out << ",";
+  // out << "cellH=" << _cellH;
+  // out << ",";
   out << "searchRadius=" << _searchRadius;
-  out << ","; 
-  out << "ParallelState=" << toString(_ParallelState);
-  out << ","; 
-  out << "MoveState=" << toString(_MoveState);
-  out << ","; 
-  out << "CellHasUpdatedParticle=" << _CellHasUpdatedParticle;
-  out << ","; 
-  out << "mass=" << _mass;
-  out << ","; 
-  out << "v=" << _v;
-  out << ","; 
-  out << "a=" << _a;
-  out << ","; 
+  out << ",";
+  // out << "ParallelState=" << toString(_ParallelState);
+  // out << ",";
+  // out << "MoveState=" << toString(_MoveState);
+  // out << ",";
+  // out << "CellHasUpdatedParticle=" << _CellHasUpdatedParticle;
+  // out << ",";
+  // out << "mass=" << _mass;
+  // out << ",";
+  // out << "v=" << _v;
+  // out << ",";
+  // out << "a=" << _a;
+  // out << ",";
   out << "density=" << _density;
-  out << ","; 
-  out << "pressure=" << _pressure;
-  out << ","; 
+  out << ",";
+  // out << "pressure=" << _pressure;
+  // out << ",";
   out << "smoothingLength=" << _smoothingLength;
-  out << ","; 
-  out << "u=" << _u;
-  out << ","; 
-  out << "uDot=" << _uDot;
-  out << ","; 
-  out << "v_full=" << _v_full;
-  out << ","; 
-  out << "u_full=" << _u_full;
-  out << ","; 
+  out << ",";
+/*   out << "u=" << _u; */
+  /* out << ",";  */
+  /* out << "uDot=" << _uDot; */
+  /* out << ",";  */
+  /* out << "v_full=" << _v_full; */
+  /* out << ",";  */
+  /* out << "u_full=" << _u_full; */
+  // out << ",";
   out << "wcount=" << _wcount;
-  out << ","; 
+  out << ",";
   out << "wcount_dh=" << _wcount_dh;
-  out << ","; 
+  out << ",";
   out << "f=" << _f;
-  out << ","; 
+  out << ",";
   out << "hDot=" << _hDot;
-  out << ","; 
+  out << ",";
   out << "rho_dh=" << _rho_dh;
-  out << ","; 
+  out << ",";
   out << "smoothingLengthIterCount=" << _smoothingLengthIterCount;
-  out << ","; 
+  out << ",";
   out << "hasNoNeighbours=" << _hasNoNeighbours;
-  out << ","; 
-  out << "isBoundaryParticle=" << _isBoundaryParticle;
-  out << ","; 
+  out << ",";
+  // out << "isBoundaryParticle=" << _isBoundaryParticle;
+  // out << ",";
   out << "smoothingLengthConverged=" << _smoothingLengthConverged;
-  out << ","; 
+  out << ",";
   out << "partid=" << _partid;
-  out << ","; 
-  out << "cfl=" << _cfl;
-  out << ","; 
-  out << "initialTimeStepSize=" << _initialTimeStepSize;
-  out << ","; 
-  out << "adjustTimeStepSize=" << _adjustTimeStepSize;
-  out << ","; 
+  out << ",";
+/*   out << "cfl=" << _cfl; */
+  /* out << ",";  */
+  /* out << "initialTimeStepSize=" << _initialTimeStepSize; */
+  /* out << ",";  */
+  /* out << "adjustTimeStepSize=" << _adjustTimeStepSize; */
+  // out << ",";
   out << "hydroDimensions=" << _hydroDimensions;
-  out << ","; 
+  out << ",";
   out << "etaFactor=" << _etaFactor;
-  out << ","; 
+  out << ",";
   out << "smlMin=" << _smlMin;
-  out << ","; 
+  out << ",";
   out << "smlMax=" << _smlMax;
-  out << ","; 
+  out << ",";
   out << "smlTolerance=" << _smlTolerance;
-  out << ","; 
+  out << ",";
   out << "smlMaxIterations=" << _smlMaxIterations;
-  out << ","; 
-  out << "alphaAV=" << _alphaAV;
-  out << ","; 
-  out << "betaAV=" << _betaAV;
-  out << ","; 
-  out << "balsara=" << _balsara;
-  out << ","; 
-  out << "rot_v=" << _rot_v;
-  out << ","; 
-  out << "div_v=" << _div_v;
-  out << ","; 
-  out << "v_sig_AV=" << _v_sig_AV;
-  out << ","; 
-  out << "soundSpeed=" << _soundSpeed;
-#if PeanoDebug > 0
-  out << ","; 
-  out << "dependencyChecksPeanoEventUsedBySwift=" << toString(_dependencyChecksPeanoEventUsedBySwift);
-#endif 
-#if PeanoDebug > 0
-  out << ","; 
-  out << "dependencyChecksAlgorithmStepLastUpdated=" << toString(_dependencyChecksAlgorithmStepLastUpdated);
-#endif 
-#if PeanoDebug > 0
-  out << ","; 
-  out << "dependencyChecksAlgorithmStepUpdates=" << _dependencyChecksAlgorithmStepUpdates[0] << ",...";
-#endif 
-#if PeanoDebug > 0
-  out << ","; 
-  out << "dependencyChecksAlgorithmStepMaskOuts=" << _dependencyChecksAlgorithmStepMaskOuts[0] << ",...";
-#endif 
-#if PeanoDebug > 0
-  out << ","; 
-  out << "dependencyChecksInitStepLastUpdated=" << toString(_dependencyChecksInitStepLastUpdated);
-#endif 
-#if PeanoDebug > 0
-  out << ","; 
-  out << "dependencyChecksInitStepUpdates=" << _dependencyChecksInitStepUpdates[0] << ",...";
-#endif 
-#if PeanoDebug > 0
-  out << ","; 
-  out << "dependencyChecksInitStepMaskOuts=" << _dependencyChecksInitStepMaskOuts[0] << ",...";
-#endif 
+  out << ",";
+/*   out << "alphaAV=" << _alphaAV; */
+/*   out << ",";  */
+/*   out << "betaAV=" << _betaAV; */
+/*   out << ",";  */
+/*   out << "balsara=" << _balsara; */
+/*   out << ",";  */
+/*   out << "rot_v=" << _rot_v; */
+/*   out << ",";  */
+/*   out << "div_v=" << _div_v; */
+/*   out << ",";  */
+/*   out << "v_sig_AV=" << _v_sig_AV; */
+/*   out << ",";  */
+/*   out << "soundSpeed=" << _soundSpeed; */
+/* #if PeanoDebug > 0 */
+/*   out << ",";  */
+/*   out << "dependencyChecksPeanoEventUsedBySwift=" << toString(_dependencyChecksPeanoEventUsedBySwift); */
+/* #endif  */
+/* #if PeanoDebug > 0 */
+/*   out << ",";  */
+/*   out << "dependencyChecksAlgorithmStepLastUpdated=" << toString(_dependencyChecksAlgorithmStepLastUpdated); */
+/* #endif  */
+/* #if PeanoDebug > 0 */
+/*   out << ",";  */
+/*   out << "dependencyChecksAlgorithmStepUpdates=" << _dependencyChecksAlgorithmStepUpdates[0] << ",..."; */
+/* #endif  */
+/* #if PeanoDebug > 0 */
+/*   out << ",";  */
+/*   out << "dependencyChecksAlgorithmStepMaskOuts=" << _dependencyChecksAlgorithmStepMaskOuts[0] << ",..."; */
+/* #endif  */
+/* #if PeanoDebug > 0 */
+/*   out << ",";  */
+/*   out << "dependencyChecksInitStepLastUpdated=" << toString(_dependencyChecksInitStepLastUpdated); */
+/* #endif  */
+/* #if PeanoDebug > 0 */
+/*   out << ",";  */
+/*   out << "dependencyChecksInitStepUpdates=" << _dependencyChecksInitStepUpdates[0] << ",..."; */
+/* #endif  */
+/* #if PeanoDebug > 0 */
+/*   out << ",";  */
+/*   out << "dependencyChecksInitStepMaskOuts=" << _dependencyChecksInitStepMaskOuts[0] << ",..."; */
+// #endif
   out << ")";
   return out.str();
 }
@@ -286,7 +286,7 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setDebugX(int index, dou
 }
 
 
-#endif 
+#endif
 
 
 #if PeanoDebug>0
@@ -310,7 +310,7 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setDebugH(int index, dou
 }
 
 
-#endif 
+#endif
 
 
 tarch::la::Vector<Dimensions,double>   tests::swift2::testSML1D::globaldata::hydroPart::getX() const {
@@ -760,7 +760,7 @@ const std::string   tests::swift2::testSML1D::globaldata::hydroPart::toString(De
 }
 
 
-#endif 
+#endif
 
 
 #if PeanoDebug > 0
@@ -781,7 +781,7 @@ const std::string   tests::swift2::testSML1D::globaldata::hydroPart::toString(De
 }
 
 
-#endif 
+#endif
 
 
 #if PeanoDebug > 0
@@ -805,7 +805,7 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setDependencyChecksAlgor
 }
 
 
-#endif 
+#endif
 
 
 #if PeanoDebug > 0
@@ -829,7 +829,7 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setDependencyChecksAlgor
 }
 
 
-#endif 
+#endif
 
 
 #if PeanoDebug > 0
@@ -850,7 +850,7 @@ const std::string   tests::swift2::testSML1D::globaldata::hydroPart::toString(De
 }
 
 
-#endif 
+#endif
 
 
 #if PeanoDebug > 0
@@ -874,7 +874,7 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setDependencyChecksInitS
 }
 
 
-#endif 
+#endif
 
 
 #if PeanoDebug > 0
@@ -898,7 +898,7 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setDependencyChecksInitS
 }
 
 
-#endif 
+#endif
 
 
 
@@ -1000,10 +1000,10 @@ void tests::swift2::testSML1D::globaldata::hydroPart::initDatatype() {
   int NumberOfAttributes = 0;
 #if PeanoDebug>0
   NumberOfAttributes++;
-#endif 
+#endif
 #if PeanoDebug>0
   NumberOfAttributes++;
-#endif 
+#endif
   NumberOfAttributes++;
   NumberOfAttributes++;
   NumberOfAttributes++;
@@ -1037,25 +1037,25 @@ void tests::swift2::testSML1D::globaldata::hydroPart::initDatatype() {
   NumberOfAttributes++;
 #if PeanoDebug > 0
   NumberOfAttributes++;
-#endif 
+#endif
 #if PeanoDebug > 0
   NumberOfAttributes++;
-#endif 
+#endif
 #if PeanoDebug > 0
   NumberOfAttributes++;
-#endif 
+#endif
 #if PeanoDebug > 0
   NumberOfAttributes++;
-#endif 
+#endif
 #if PeanoDebug > 0
   NumberOfAttributes++;
-#endif 
+#endif
 #if PeanoDebug > 0
   NumberOfAttributes++;
-#endif 
+#endif
 #if PeanoDebug > 0
   NumberOfAttributes++;
-#endif 
+#endif
 
   MPI_Datatype* subtypes = new MPI_Datatype[NumberOfAttributes];
   int*          blocklen = new int[NumberOfAttributes];
@@ -1446,7 +1446,7 @@ void tests::swift2::testSML1D::globaldata::hydroPart::receiveAndPollDanglingMess
   );
 }
 #endif
-    
+
 ::swift2::ParticleSpecies& tests::swift2::testSML1D::globaldata::hydroPart::getSpecies() {
   static ::swift2::ParticleSpecies species;
   return species;

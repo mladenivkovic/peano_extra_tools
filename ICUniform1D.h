@@ -1,10 +1,16 @@
 #pragma once
 
+#include <string>
+
 namespace initialConditions {
   namespace oneDim {
-    namespace uniform {
 
-      const int sampleSize = 20;
+    class IC1DUniform{
+
+public:
+      std::string name = "1D Uniform";
+
+      int sampleSize = 20;
 
       double coords[20][3] = {
         { 7.07400215e-02, 0.00000000e+00, 0.00000000e+00 },
@@ -54,7 +60,7 @@ namespace initialConditions {
       };
 
 
-      double sml[20] = {
+      double sml_init[20] = {
         0.0020000000949949026,
         0.0020000000949949026,
         0.0020000000949949026,
@@ -77,6 +83,6 @@ namespace initialConditions {
         0.0020000000949949026
       };
 
-    }
+    }; // end class
   }
 }
