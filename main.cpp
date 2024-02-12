@@ -1,6 +1,10 @@
 #include <iostream>
 
 
+#include "myconfig.h"
+
+
+
 int main(void){
 
 
