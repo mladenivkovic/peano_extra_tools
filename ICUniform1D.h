@@ -12,6 +12,10 @@ public:
 
       int sampleSize = 30;
 
+      // Start and end computing smoothing lengths with these indices
+      int indexBegin = 10;
+      int indexEnd = sampleSize - 10;
+
       double coords[30][3] = {
         { 7.07400215e-02, 0.00000000e+00, 0.00000000e+00 },
         { 7.10676898e-02, 0.00000000e+00, 0.00000000e+00 },

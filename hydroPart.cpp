@@ -5,6 +5,14 @@
 #include <sstream>
 #include <algorithm>
 
+// Just some default values. Will be modified in actual test.
+double tests::swift2::testSML1D::globaldata::hydroPart::_hydroDimensions = 1;
+double tests::swift2::testSML1D::globaldata::hydroPart::_etaFactor = 2.5819884616099626;
+
+int tests::swift2::testSML1D::globaldata::hydroPart::_smlMaxIterations = 50;
+double tests::swift2::testSML1D::globaldata::hydroPart::_smlMin = 1e-06;
+double tests::swift2::testSML1D::globaldata::hydroPart::_smlMax = 0.05;
+double tests::swift2::testSML1D::globaldata::hydroPart::_smlTolerance = 1e-06;
 
 
 tests::swift2::testSML1D::globaldata::hydroPart::hydroPart(tarch::la::Vector<Dimensions,double>  __debugX, tarch::la::Vector<Dimensions,double>  __debugH, tarch::la::Vector<Dimensions,double>  __x, tarch::la::Vector<Dimensions,double>  __cellH, double  __searchRadius, ParallelState  __ParallelState, MoveState  __MoveState, bool  __CellHasUpdatedParticle, double  __mass, tarch::la::Vector<Dimensions,double>  __v, tarch::la::Vector<Dimensions,double>  __a, double  __density, double  __pressure, double  __smoothingLength, double  __u, double  __uDot, tarch::la::Vector<Dimensions,double>  __v_full, double  __u_full, double  __wcount, double  __wcount_dh, double  __f, double  __hDot, double  __rho_dh, int  __smoothingLengthIterCount, bool  __hasNoNeighbours, bool  __isBoundaryParticle, bool  __smoothingLengthConverged, int  __partid, double  __balsara, double  __rot_v, double  __div_v, double  __v_sig_AV, double  __soundSpeed, DependencyChecksPeanoEventUsedBySwift  __dependencyChecksPeanoEventUsedBySwift, DependencyChecksAlgorithmStepLastUpdated  __dependencyChecksAlgorithmStepLastUpdated, int  __dependencyChecksAlgorithmStepUpdates[21], int  __dependencyChecksAlgorithmStepMaskOuts[21], DependencyChecksInitStepLastUpdated  __dependencyChecksInitStepLastUpdated, int  __dependencyChecksInitStepUpdates[0], int  __dependencyChecksInitStepMaskOuts[0]){

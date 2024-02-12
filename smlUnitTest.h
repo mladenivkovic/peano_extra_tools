@@ -103,7 +103,7 @@ namespace smlUnitTest {
 
     // We could to this for all particles simultaneously, but I don't want to.
     // Go particle by particle.
-    for (int localParticleIndex = 10; localParticleIndex < ic.sampleSize - 10; localParticleIndex++){
+    for (int localParticleIndex = ic.indexBegin; localParticleIndex < ic.indexEnd; localParticleIndex++){
 
       hydroPart *localParticle = getLocalParticle(particleList, localParticleIndex);
       double h_solution = ic.sml_solution[localParticleIndex];

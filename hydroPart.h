@@ -304,6 +304,13 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
 
     std::string toString() const;
 
+    static double   _hydroDimensions;
+    static double   _etaFactor;
+    static double   _smlMin;
+    static double   _smlMax;
+    static double   _smlTolerance;
+    static int   _smlMaxIterations;
+
   private:
 #if PeanoDebug>0
     tarch::la::Vector<Dimensions,double>   _debugX;
@@ -340,14 +347,9 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
       inline const static double   _cfl = 1e-06;
       inline const static double   _initialTimeStepSize = 1e-06;
       inline const static bool   _adjustTimeStepSize = false;
-      inline const static double   _hydroDimensions = 1;
-      inline const static double   _etaFactor = 2.5819884616099626;
-      inline const static double   _smlMin = 1e-06;
-      inline const static double   _smlMax = 0.05;
-      inline const static double   _smlTolerance = 1e-06;
-      inline const static int   _smlMaxIterations = 50;
       inline const static double   _alphaAV = 0.8;
       inline const static double   _betaAV = 3.0;
+
       double   _balsara;
       double   _rot_v;
       double   _div_v;
