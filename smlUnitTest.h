@@ -22,6 +22,29 @@ namespace smlUnitTest {
   using hydroPart = tests::swift2::testSML1D::globaldata::hydroPart;
 
 
+/**
+ * Set some global/static parameters.
+ */
+void setStaticParams(int dimension){
+
+  if (dimension == 1){
+    hydroPart::_hydroDimensions = 1;
+    hydroPart::_etaFactor = 2.5819884616099626;
+  } else if (dimension == 2){
+    hydroPart::_hydroDimensions = 2;
+    hydroPart::_etaFactor = 1.2761313865909358;
+  } else {
+    std::cerr << "Invalid number of dimensions: "<< dimension << std::endl;
+    std::abort();
+  }
+
+  hydroPart::_smlMaxIterations = 50;
+  hydroPart::_smlMin = 1e-06;
+  hydroPart::_smlMax = 0.05;
+  hydroPart::_smlTolerance = 1e-06;
+}
+
+
   /**
    * Grab the pointer to a specific particle
    **/
