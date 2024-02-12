@@ -5,7 +5,7 @@
 namespace initialConditions {
   namespace oneDim {
 
-    class IC1DUniform{
+    class ICUniform{
 
 public:
       std::string name = "1D Uniform";

@@ -5,7 +5,7 @@
 namespace initialConditions {
   namespace oneDim {
 
-    class IC1DDisplaced{
+    class ICDisplaced{
 
 public:
       std::string name = "1D Randomly Displaced";

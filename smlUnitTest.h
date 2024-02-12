@@ -90,6 +90,9 @@ namespace smlUnitTest {
     // Talk to me
     std::cout << "Running '" << ic.name << "'\n";
 
+    double mindiff = 1e30;
+    double maxdiff = -1.;
+
     // Set up
     std::list<hydroPart*> particleList = initParticles(ic);
 
@@ -132,14 +135,22 @@ namespace smlUnitTest {
       }
 
       double h = localParticle->getSmoothingLength();
-      if (std::abs(h/h_solution - 1.) > 1e-5) {
+      double diff = std::abs(h/h_solution - 1.);
+      if ( diff > 1e-5) {
         std::cout << "ERROR: Smoothing lengths don't agree. ";
         std::cout << " Got: h=" << h << "; ";
         std::cout << " Expect: h=" << h_solution << "; ";
         std::cout << " Ratio: h=" << h/h_solution << "; ";
-        std::cout << " Error: h=" << std::abs(h/h_solution - 1.) << std::endl;
+        std::cout << " Error: h=" << diff << std::endl;
       }
 
+      mindiff = std::min(diff, mindiff);
+      maxdiff = std::max(diff, maxdiff);
+
     }
+
+    std::cout << "Diff min=" << mindiff << "; max=" << maxdiff << "\n";
+
+
   }
 } // namespace smlUnitTest
