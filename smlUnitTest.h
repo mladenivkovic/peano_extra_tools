@@ -140,8 +140,6 @@ namespace smlUnitTest {
         std::cout << " Error: h=" << std::abs(h/h_solution - 1.) << std::endl;
       }
 
-
-
     }
   }
 } // namespace smlUnitTest
