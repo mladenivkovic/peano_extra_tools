@@ -20,9 +20,9 @@ LIBS += -L../../../../src -lSWIFT2Core2d_asserts  -lToolboxBlockstructured2d_ass
 HEADERS=myconfig.h ICUniform1D.h ICDisplaced1D.h ./ICMultilevelDisplaced1D.h ./ICUniform2D.h hydroPart.h smlUnitTest.h
 OBJECTS=
 
-DEF1D=-DHYDRO_DIMENSION=1 -Dimensions=2
-DEF2D=-DHYDRO_DIMENSION=2 -Dimensions=2
-DEF3D=-DHYDRO_DIMENSION=3 -Dimensions=3
+DEF1D=-DHYDRO_DIMENSION=1 -DDimensions=2
+DEF2D=-DHYDRO_DIMENSION=2 -DDimensions=2
+DEF3D=-DHYDRO_DIMENSION=3 -DDimensions=3
 
 CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(LIBS) 
 

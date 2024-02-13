@@ -31,19 +31,22 @@ void setStaticParams(int dimension){
   if (dimension == 1){
     hydroPart::_hydroDimensions = 1;
     hydroPart::_etaFactor = 2.5819884616099626;
+    hydroPart::_smlMin = 1e-06;
     hydroPart::_smlMax = 0.05;
+    hydroPart::_smlMaxIterations = 50;
+    hydroPart::_smlTolerance = 1e-06;
   } else if (dimension == 2){
     hydroPart::_hydroDimensions = 2;
     hydroPart::_etaFactor = 1.2761313865909358;
+    hydroPart::_smlMin = 1e-06;
     hydroPart::_smlMax = 0.20;
+    hydroPart::_smlMaxIterations = 50;
+    hydroPart::_smlTolerance = 1e-06;
   } else {
     std::cerr << "Invalid number of dimensions: "<< dimension << std::endl;
     std::abort();
   }
 
-  hydroPart::_smlMaxIterations = 50;
-  hydroPart::_smlMin = 1e-06;
-  hydroPart::_smlTolerance = 1e-06;
 }
 
 
@@ -75,10 +78,10 @@ void setStaticParams(int dimension){
       hydroPart *part = new hydroPart();
 
       part->setX(0, ic.coords[p][0]);
-#if Dimension > 1
+#if Dimensions > 1
       part->setX(1, ic.coords[p][1]);
 #endif
-#if Dimension > 2
+#if Dimensions > 2
       part->setX(2, ic.coords[p][2]);
 #endif
 
@@ -91,10 +94,10 @@ void setStaticParams(int dimension){
       part->setU(1.);
 
       part->setV(0, 0.);
-#if Dimension > 1
+#if Dimensions > 1
       part->setV(1, 0.);
 #endif
-#if Dimension > 2
+#if Dimensions > 2
       part->setV(2, 0.);
 #endif
 
