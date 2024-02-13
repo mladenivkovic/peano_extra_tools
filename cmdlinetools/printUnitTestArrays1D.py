@@ -9,13 +9,15 @@ import h5py
 from scipy.spatial import KDTree
 import numpy as np
 import sys
+import os
 import peano4
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
 import swift2.sphtools
 
 
 
-file = "test_sml_1D.hdf5"
+#  file = "test_sml_1D.hdf5"
+file = "test_sml_multiscale_1D.hdf5"
 h_tolerance = 1.e-6
 kernel = "quartic_spline"
 ndim = 1
@@ -25,8 +27,10 @@ nneigh = swift2.sphtools.number_of_neighbours_from_eta(
     )
 
 # start and end of indexes of particle array to take
-index_start = 800
-index_end = 850
+index_start = 0
+index_end = 1000
+#  index_start = 800
+#  index_end = 850
 size = index_end - index_start
 
 
@@ -49,13 +53,18 @@ gas = f["PartType0"]
 coords = gas["Coordinates"][:]
 ids = gas["ParticleIDs"][:]
 sml_ic = gas["SmoothingLength"][:]
+random_seed = f["Header"].attrs["RandomSeed"]
 f.close()
-
 
 # Sort by particle ID
 sort_ic = np.argsort(ids)
 ids = ids[sort_ic]
 coords = coords[sort_ic]
+sml_ic = sml_ic[sort_ic]
+
+ids = ids[index_start:index_end]
+coords = coords[index_start:index_end, :]
+sml_ic = sml_ic[index_start:index_end]
 
 
 # Get expected results
@@ -79,13 +88,28 @@ for i in range(npart):
     sml_python[i] = h
 
 
-
 indent = "      "
+print("=================================================================")
+
+
+print()
+filepath = os.path.join(os.getcwd(), file)
+if filepath.startswith("/home/mivkov/Durham/"):
+    filepath = filepath[len("/home/mivkov/Durham/"):]
+print(indent+"// File: " + filepath)
+print(indent+f"// Random Seed: {random_seed}")
+print(indent+f"// IC particle index start: {index_start}")
+print(indent+f"// IC particle index end: {index_end}")
+print()
+
 print(indent+f"int sampleSize = {size};")
 print()
+print(indent+f"int indexBegin = 10;")
+print(indent+f"int indexEnd = {size-10};")
+print()
 print(indent+f"double coords[{size}][3] = {{")
-#  for i in range(coords.shape[0]):
-for i in range(index_start, index_end):
+#  for i in range(index_start, index_end):
+for i in range(coords.shape[0]):
     if i != index_end - 1:
         comma = ","
     else:
@@ -104,8 +128,8 @@ print()
 print()
 
 print(indent+f"int ids[{size}] = {{")
-#  for i in range(coords.shape[0]):
-for i in range(index_start, index_end):
+#  for i in range(index_start, index_end):
+for i in range(coords.shape[0]):
     if i != index_end - 1:
         comma = ","
     else:
@@ -120,7 +144,8 @@ print()
 
 
 print(indent+f"double sml_init[{size}] = {{")
-for i in range(index_start, index_end):
+#  for i in range(index_start, index_end):
+for i in range(coords.shape[0]):
     if i != index_end - 1:
         comma = ","
     else:
@@ -132,7 +157,8 @@ print(indent+"};")
 print()
 
 print(indent+f"double sml_solution[{size}] = {{")
-for i in range(index_start, index_end):
+#  for i in range(index_start, index_end):
+for i in range(coords.shape[0]):
     if i != index_end - 1:
         comma = ","
     else:
