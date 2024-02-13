@@ -5,6 +5,7 @@
 # Extract and print data for unit test
 # -------------------------------------------
 
+
 import h5py
 from scipy.spatial import KDTree
 import numpy as np
@@ -21,6 +22,7 @@ file = "test_sml_multiscale_1D.hdf5"
 h_tolerance = 1.e-6
 kernel = "quartic_spline"
 ndim = 1
+
 eta = 2.5819884616099626
 nneigh = swift2.sphtools.number_of_neighbours_from_eta(
     eta, kernel=kernel, ndim=ndim
@@ -55,6 +57,7 @@ ids = gas["ParticleIDs"][:]
 sml_ic = gas["SmoothingLength"][:]
 random_seed = f["Header"].attrs["RandomSeed"]
 f.close()
+
 
 # Sort by particle ID
 sort_ic = np.argsort(ids)

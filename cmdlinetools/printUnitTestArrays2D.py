@@ -10,6 +10,7 @@ import h5py
 from scipy.spatial import KDTree
 import numpy as np
 import sys
+import os
 import peano4
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
 import swift2.sphtools
@@ -17,6 +18,7 @@ import swift2.sphtools
 
 
 file = "test_sml_2D.hdf5"
+#  file = "test_sml_multiscale_1D.hdf5"
 h_tolerance = 1.e-6
 kernel = "quartic_spline"
 ndim = 2
@@ -45,6 +47,7 @@ gas = f["PartType0"]
 coords = gas["Coordinates"][:]
 ids = gas["ParticleIDs"][:]
 sml_ic = gas["SmoothingLength"][:]
+random_seed = f["Header"].attrs["RandomSeed"]
 
 boxsize = f["Header"].attrs["BoxSize"]
 
@@ -55,6 +58,77 @@ f.close()
 sort_ic = np.argsort(ids)
 ids = ids[sort_ic]
 coords = coords[sort_ic]
+sml_ic = sml_ic[sort_ic]
+
+# select inner and outer box in the middle of the actual box
+# then arange them such that the inner box is in the middle
+# of the array.
+# This is so that I don't have to modify the unit tests.
+
+
+dx_inner = 0.15
+dx_outer = 0.4
+
+
+
+inner_mask = coords[:, 0] > 0.5 * boxsize - dx_inner
+inner_mask = np.logical_and(inner_mask, coords[:, 0] < 0.5 * boxsize + dx_inner)
+inner_mask = np.logical_and(inner_mask, coords[:, 1] > 0.5 * boxsize - dx_inner)
+inner_mask = np.logical_and(inner_mask, coords[:, 1] < 0.5 * boxsize + dx_inner)
+
+outer_mask = coords[:, 0] > 0.5 * boxsize - dx_outer
+outer_mask = np.logical_and(outer_mask, coords[:, 0] < 0.5 * boxsize + dx_outer)
+outer_mask = np.logical_and(outer_mask, coords[:, 1] > 0.5 * boxsize - dx_outer)
+outer_mask = np.logical_and(outer_mask, coords[:, 1] < 0.5 * boxsize + dx_outer)
+
+outer_mask = np.logical_and(outer_mask, np.logical_not(inner_mask))
+
+mask_full = np.logical_or(inner_mask, outer_mask)
+
+
+
+#  from matplotlib import  pyplot as plt
+#  plt.figure()
+#  plt.subplot(121)
+#  plt.scatter(coords[inner_mask, 0], coords[inner_mask, 1], c='b')
+#  plt.subplot(122)
+#  plt.scatter(coords[outer_mask, 0], coords[outer_mask, 1], c='r')
+#  plt.show()
+#
+#  quit()
+
+
+
+count_inner = np.count_nonzero(inner_mask)
+count_outer = np.count_nonzero(outer_mask)
+
+print("Inner:", count_inner)
+print("Outer:", count_outer)
+
+size = count_inner + count_outer
+
+
+# Filter out unwanted particles
+ids = ids[mask_full]
+coords = coords[mask_full,:]
+sml_ic = sml_ic[mask_full]
+
+# Now that we've filtered out unwanted particles, refresh the masks
+# to fit into the new array sizes
+inner_mask = coords[:, 0] > 0.5 * boxsize - dx_inner
+inner_mask = np.logical_and(inner_mask, coords[:, 0] < 0.5 * boxsize + dx_inner)
+inner_mask = np.logical_and(inner_mask, coords[:, 1] > 0.5 * boxsize - dx_inner)
+inner_mask = np.logical_and(inner_mask, coords[:, 1] < 0.5 * boxsize + dx_inner)
+
+outer_mask = coords[:, 0] > 0.5 * boxsize - dx_outer
+outer_mask = np.logical_and(outer_mask, coords[:, 0] < 0.5 * boxsize + dx_outer)
+outer_mask = np.logical_and(outer_mask, coords[:, 1] > 0.5 * boxsize - dx_outer)
+outer_mask = np.logical_and(outer_mask, coords[:, 1] < 0.5 * boxsize + dx_outer)
+
+outer_mask = np.logical_and(outer_mask, np.logical_not(inner_mask))
+
+
+
 
 
 # Get expected results
@@ -78,58 +152,20 @@ for i in range(npart):
     sml_python[i] = h
 
 
-
-
-# select inner and outer box in the middle of the actual box
-# then arange them such that the inner box is in the middle
-# of the array.
-# This is so that I don't have to modify the unit tests.
-
-
-dx_inner = 0.15
-dx_outer = 0.4
-
-
-
-inner_mask = coords[:, 0] > 0.5 * boxsize - dx_inner
-inner_mask = np.logical_and(inner_mask, coords[:, 0] < 0.5 * boxsize + dx_inner)
-inner_mask = np.logical_and(inner_mask, coords[:, 1] > 0.5 * boxsize - dx_inner)
-inner_mask = np.logical_and(inner_mask, coords[:, 1] < 0.5 * boxsize + dx_inner)
-
-outer_mask = coords[:, 0] > 0.5 * boxsize - dx_outer
-outer_mask = np.logical_and(outer_mask, coords[:, 0] < 0.5 * boxsize + dx_outer)
-outer_mask = np.logical_and(outer_mask, coords[:, 1] > 0.5 * boxsize - dx_outer)
-outer_mask = np.logical_and(outer_mask, coords[:, 1] < 0.5 * boxsize + dx_outer)
-
-
-outer_mask = np.logical_and(outer_mask, np.logical_not(inner_mask))
-
-
-
-#  from matplotlib import  pyplot as plt
-#  plt.figure()
-#  plt.subplot(121)
-#  plt.scatter(coords[inner_mask, 0], coords[inner_mask, 1])
-#  plt.subplot(122)
-#  plt.scatter(coords[outer_mask, 0], coords[outer_mask, 1])
-#  plt.show()
-#
-#  quit()
-
-
-
-
-
-
-count_inner = np.count_nonzero(inner_mask)
-count_outer = np.count_nonzero(outer_mask)
-
-print("Inner:", count_inner)
-print("Outer:", count_outer)
-
-size = count_inner + count_outer
-
 indent = "      "
+print("=================================================================")
+
+
+print()
+filepath = os.path.join(os.getcwd(), file)
+if filepath.startswith("/home/mivkov/Durham/"):
+    filepath = filepath[len("/home/mivkov/Durham/"):]
+print(indent+"// File: " + filepath)
+print(indent+f"// Random Seed: {random_seed}")
+print(indent+f"// size of box for selected particles: {dx_inner}")
+print(indent+f"// size of box surrounding selected particles ('boundary particles'): {dx_outer}")
+print()
+
 print(indent+f"int sampleSize = {size};")
 print()
 print(indent+f"int indexBegin = 0;")
