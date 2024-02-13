@@ -23,31 +23,31 @@ namespace smlUnitTest {
   using hydroPart = tests::swift2::testSML1D::globaldata::hydroPart;
 
 
-/**
- * Set some global/static parameters.
- */
-void setStaticParams(int dimension){
+  /**
+   * Set some global/static parameters.
+   */
+  void setStaticParams(int dimension){
 
-  if (dimension == 1){
-    hydroPart::_hydroDimensions = 1;
-    hydroPart::_etaFactor = 2.5819884616099626;
-    hydroPart::_smlMin = 1e-06;
-    hydroPart::_smlMax = 0.05;
-    hydroPart::_smlMaxIterations = 50;
-    hydroPart::_smlTolerance = 1e-06;
-  } else if (dimension == 2){
-    hydroPart::_hydroDimensions = 2;
-    hydroPart::_etaFactor = 1.2761313865909358;
-    hydroPart::_smlMin = 1e-06;
-    hydroPart::_smlMax = 0.20;
-    hydroPart::_smlMaxIterations = 50;
-    hydroPart::_smlTolerance = 1e-06;
-  } else {
-    std::cerr << "Invalid number of dimensions: "<< dimension << std::endl;
-    std::abort();
+    if (dimension == 1){
+      hydroPart::_hydroDimensions = 1;
+      hydroPart::_etaFactor = 2.5819884616099626;
+      hydroPart::_smlMin = 1e-06;
+      hydroPart::_smlMax = 0.05;
+      hydroPart::_smlMaxIterations = 50;
+      hydroPart::_smlTolerance = 1e-06;
+    } else if (dimension == 2){
+      hydroPart::_hydroDimensions = 2;
+      hydroPart::_etaFactor = 1.2761313865909358;
+      hydroPart::_smlMin = 1e-06;
+      hydroPart::_smlMax = 0.20;
+      hydroPart::_smlMaxIterations = 50;
+      hydroPart::_smlTolerance = 1e-06;
+    } else {
+      std::cerr << "Invalid number of dimensions: "<< dimension << std::endl;
+      std::abort();
+    }
+
   }
-
-}
 
 
   /**
@@ -111,9 +111,21 @@ void setStaticParams(int dimension){
 
 
 
-
+  /**
+   * Run the actual smoothing length computation test.
+   *
+   * @param ic an initial conditions object, containing particle data and
+   * solutions.
+   * @param check_all Whether to check all particles. If true, this test
+   * will loop over all available particles given in the ICs. If false, it
+   * will loop only over the particle indices specified in the IC object
+   * as ic.indexBegin and ic.indexEnd. This is to avoid weird constellations
+   * with particles around the edges that don't have enough neighbours, as
+   * we're not doing periodic boundary conditions here.
+   * @param verbose if true, print additional info to screen
+   */
   template <typename IC>
-  void runTest(IC ic){
+  void runTest(IC ic, bool check_all, bool verbose){
 
     // Talk to me
     std::cout << "Running '" << ic.name << "'\n";
@@ -129,9 +141,18 @@ void setStaticParams(int dimension){
       std::abort();
     }
 
-    // We could to this for all particles simultaneously, but I don't want to.
-    // Go particle by particle.
-    for (int localParticleIndex = ic.indexBegin; localParticleIndex < ic.indexEnd; localParticleIndex++){
+    int start = ic.indexBegin;
+    int stop = ic.indexEnd;
+    if (check_all){
+      start = 0;
+      stop = ic.sampleSize;
+    }
+    int error = 0;
+
+    // Main loop
+    for (int localParticleIndex = start; localParticleIndex < stop; localParticleIndex++){
+      // We could to this for all particles simultaneously, but I don't want to.
+      // Go particle by particle.
 
       hydroPart *localParticle = getLocalParticle(particleList, localParticleIndex);
       double h_solution = ic.sml_solution[localParticleIndex];
@@ -139,6 +160,7 @@ void setStaticParams(int dimension){
       int iteration = 0;
       while (iteration < hydroPart::getSmlMaxIterations() ){
         iteration++;
+        // this flag determines whether we reiterate or not.
         localParticle->getSpecies().clearRerunPreviousGridSweepFlag();
 
         for (hydroPart* particle : particleList) {
@@ -159,7 +181,9 @@ void setStaticParams(int dimension){
         std::cout << "Error: did not converge after " << iteration << " iterations" << std::endl;
         std::cout << localParticle->getSmoothingLengthIterCount() << std::endl;
       } else {
-        std::cout << "Finished (converged) after " << iteration << " iterations" << std::endl;
+        if (verbose){
+          std::cout << "Finished (converged) after " << iteration << " iterations" << std::endl;
+        }
       }
 
       double h = localParticle->getSmoothingLength();
@@ -172,6 +196,7 @@ void setStaticParams(int dimension){
         std::cout << " Ratio: h=" << h/h_solution << "; ";
         std::cout << " Error: h=" << diff << std::endl;
         std::cout << localParticle->toString() << std::endl;
+        error++;
       }
 
       mindiff = std::min(diff, mindiff);
@@ -180,6 +205,10 @@ void setStaticParams(int dimension){
     }
 
     std::cout << "Diff min=" << mindiff << "; max=" << maxdiff << "\n";
+    if (error) {
+      std::cout << "Found " << error << " errors for " << ic.name << ". Exiting.";
+      std::exit(error);
+    }
 
 
   }
