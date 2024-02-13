@@ -17,6 +17,8 @@ from peano4.toolbox.particles.postprocessing.ParticleVTUReader import (
 )
 import peano_extra_tools as pet
 
+import metalmaps
+metalmaps.set_color_cycle(metalmaps.paranoid_r)
 
 partData = pet.get_particle_data_from_time_or_vtufile()
 point_field_names = partData.get_attribute_list()
@@ -54,6 +56,7 @@ scatterkwargs = {
 
 coords = getattr(partData, coordiante_fieldname)
 x = coords[:, 0]
+print("xmin=", x.min(), "xmax=", x.max())
 
 print("Read in coordinates of", x.shape[0], "particles")
 if x.shape[0] == 0:

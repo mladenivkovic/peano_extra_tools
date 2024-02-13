@@ -25,6 +25,15 @@
 # <snapshot> should be snapshot index for swift
 
 
+#  "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D-unequalMasses"
+swift_root = "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D"
+output_basename = "sodShock_"
+
+zorder_peano = 3
+zorder_swift = 1
+
+
+
 import sys
 import os
 import matplotlib
@@ -34,6 +43,9 @@ from matplotlib import pyplot as plt
 import h5py
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
 
+#  plt.style.use("seaborn")
+import metalmaps
+metalmaps.set_color_cycle(metalmaps.paranoid)
 
 # Parameters
 gas_gamma = 5.0 / 3.0  # Polytropic index
@@ -53,10 +65,6 @@ else:
 
 # Get swift data
 # -----------------------------------
-
-#  "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D-unequalMasses"
-swift_root = "/home/mivkov/Durham/swiftsim/examples/HydroTests/SodShock_1D"
-output_basename = "sodShock_"
 
 # Read the simulation data
 fname_swift = output_basename + ("%04d.hdf5" % snap)
@@ -134,7 +142,7 @@ peanokwargs = {
     "marker": ".",
     "color": "C0",
     "s": 4.0,
-    "zorder": 4,
+    "zorder": zorder_peano,
     "alpha": 0.6,
     "label": "PeanoSwift",
 }
@@ -143,16 +151,9 @@ swiftkwargs = {
     "marker": ".",
     "color": "C1",
     "s": 4.0,
-    "zorder": 2,
+    "zorder": zorder_swift,
     "alpha": 0.6,
     "label": "Swift",
-}
-
-anakwargs = {
-    "ls": "--",
-    "color": "k",
-    "alpha": 0.8,
-    "lw": 1.2,
 }
 
 
@@ -160,7 +161,6 @@ anakwargs = {
 plt.subplot(rows, cols, 1)
 plt.scatter(x, v, **peanokwargs)
 plt.scatter(x_swift, v_swift, **swiftkwargs)
-#  plt.plot(x_s, v_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Velocity}}~v_x$", labelpad=0)
 plt.legend()
@@ -178,7 +178,6 @@ plt.subplot(rows, cols, 2)
 #  else:
 plt.scatter(x, rho, **peanokwargs)
 plt.scatter(x_swift, rho_swift, **swiftkwargs)
-#  plt.plot(x_s, rho_s, **anakwargs)
 plt.ylabel("${\\rm{Density}}~\\rho$", labelpad=0)
 plt.legend()
 #  plt.ylim(0.05, 1.1)
@@ -190,7 +189,6 @@ plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.subplot(rows, cols, 3)
 plt.scatter(x, P, **peanokwargs)
 plt.scatter(x_swift, P_swift, **swiftkwargs)
-#  plt.plot(x_s, P_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Pressure}}~P$", labelpad=0)
 plt.legend()
@@ -201,7 +199,6 @@ plt.legend()
 plt.subplot(rows, cols, 4)
 plt.scatter(x, u, **peanokwargs)
 plt.scatter(x_swift, u_swift, **swiftkwargs)
-#  plt.plot(x_s, u_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Internal~Energy}}~u$", labelpad=0)
 plt.legend()
@@ -214,7 +211,6 @@ print("Size of x", x.shape)
 plt.subplot(rows, cols, 5)
 plt.scatter(x, m, **peanokwargs)
 plt.scatter(x_swift, m_swift, **swiftkwargs)
-#  plt.plot(x_s, m_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Masses}}~m$", labelpad=0)
 plt.legend()
@@ -224,11 +220,11 @@ plt.legend()
 plt.subplot(rows, cols, 6)
 plt.scatter(x, h, **peanokwargs)
 plt.scatter(x_swift, h_swift, **swiftkwargs)
-#  plt.plot(x_s, h_s, **anakwargs)
 plt.xlabel("${\\rm{Position}}~x$", labelpad=0)
 plt.ylabel("${\\rm{Smoothing Length}}~h$", labelpad=0)
 plt.legend()
 #  plt.ylim(0.05, 1.1)
+plt.xlim(0.5, 1.5)
 
 plt.show()
 quit()
