@@ -88,7 +88,9 @@ namespace smlUnitTest {
       part->setSmoothingLength(ic.sml_init[p]);
       part->setPartid(ic.ids[p]);
 
-      part->setSearchRadius(1.);
+      // TODO: TEMPORARY
+      // part->setSearchRadius(1.);
+      part->setSearchRadius(1.54919353837087214742e-01);
       part->setMass(1.);
       part->setPressure(1.);
       part->setU(1.);
@@ -102,6 +104,7 @@ namespace smlUnitTest {
 #endif
 
       part->setSmoothingLengthIterCount(0);
+      part->setSmoothingLengthNeighbourCount(0);
 
       ::swift2::kernels::legacy::hydro_prepare_density(part);
 

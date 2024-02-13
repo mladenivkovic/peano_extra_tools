@@ -15,7 +15,7 @@ double tests::swift2::testSML1D::globaldata::hydroPart::_smlMax = 0.05;
 double tests::swift2::testSML1D::globaldata::hydroPart::_smlTolerance = 1e-06;
 
 
-tests::swift2::testSML1D::globaldata::hydroPart::hydroPart(tarch::la::Vector<Dimensions,double>  __debugX, tarch::la::Vector<Dimensions,double>  __debugH, tarch::la::Vector<Dimensions,double>  __x, tarch::la::Vector<Dimensions,double>  __cellH, double  __searchRadius, ParallelState  __ParallelState, MoveState  __MoveState, bool  __CellHasUpdatedParticle, double  __mass, tarch::la::Vector<Dimensions,double>  __v, tarch::la::Vector<Dimensions,double>  __a, double  __density, double  __pressure, double  __smoothingLength, double  __u, double  __uDot, tarch::la::Vector<Dimensions,double>  __v_full, double  __u_full, double  __wcount, double  __wcount_dh, double  __f, double  __hDot, double  __rho_dh, int  __smoothingLengthIterCount, bool  __hasNoNeighbours, bool  __isBoundaryParticle, bool  __smoothingLengthConverged, int  __partid, double  __balsara, double  __rot_v, double  __div_v, double  __v_sig_AV, double  __soundSpeed, DependencyChecksPeanoEventUsedBySwift  __dependencyChecksPeanoEventUsedBySwift, DependencyChecksAlgorithmStepLastUpdated  __dependencyChecksAlgorithmStepLastUpdated, int  __dependencyChecksAlgorithmStepUpdates[21], int  __dependencyChecksAlgorithmStepMaskOuts[21], DependencyChecksInitStepLastUpdated  __dependencyChecksInitStepLastUpdated, int  __dependencyChecksInitStepUpdates[0], int  __dependencyChecksInitStepMaskOuts[0]){
+tests::swift2::testSML1D::globaldata::hydroPart::hydroPart(tarch::la::Vector<Dimensions,double>  __debugX, tarch::la::Vector<Dimensions,double>  __debugH, tarch::la::Vector<Dimensions,double>  __x, tarch::la::Vector<Dimensions,double>  __cellH, double  __searchRadius, ParallelState  __ParallelState, MoveState  __MoveState, bool  __CellHasUpdatedParticle, double  __mass, tarch::la::Vector<Dimensions,double>  __v, tarch::la::Vector<Dimensions,double>  __a, double  __density, double  __pressure, double  __smoothingLength, double  __u, double  __uDot, tarch::la::Vector<Dimensions,double>  __v_full, double  __u_full, double  __wcount, double  __wcount_dh, double  __f, double  __hDot, double  __rho_dh, int  __smoothingLengthIterCount, bool  __hasNoNeighbours, bool  __isBoundaryParticle, bool  __smoothingLengthConverged, int  __smoothingLengthNeighbourCount, int  __partid, double  __balsara, double  __rot_v, double  __div_v, double  __v_sig_AV, double  __soundSpeed, DependencyChecksPeanoEventUsedBySwift  __dependencyChecksPeanoEventUsedBySwift, DependencyChecksAlgorithmStepLastUpdated  __dependencyChecksAlgorithmStepLastUpdated, int  __dependencyChecksAlgorithmStepUpdates[21], int  __dependencyChecksAlgorithmStepMaskOuts[21], DependencyChecksInitStepLastUpdated  __dependencyChecksInitStepLastUpdated, int  __dependencyChecksInitStepUpdates[0], int  __dependencyChecksInitStepMaskOuts[0]){
 #if PeanoDebug>0
 setDebugX( __debugX);
 #endif
@@ -47,6 +47,9 @@ setSmoothingLengthIterCount( __smoothingLengthIterCount);
 setHasNoNeighbours( __hasNoNeighbours);
 setIsBoundaryParticle( __isBoundaryParticle);
 setSmoothingLengthConverged( __smoothingLengthConverged);
+#if PeanoDebug > 0
+setSmoothingLengthNeighbourCount( __smoothingLengthNeighbourCount);
+#endif
 setPartid( __partid);
 setBalsara( __balsara);
 setRot_v( __rot_v);
@@ -110,6 +113,9 @@ tests::swift2::testSML1D::globaldata::hydroPart::hydroPart( const hydroPart& cop
   setHasNoNeighbours( copy.getHasNoNeighbours() );
   setIsBoundaryParticle( copy.getIsBoundaryParticle() );
   setSmoothingLengthConverged( copy.getSmoothingLengthConverged() );
+#if PeanoDebug > 0
+  setSmoothingLengthNeighbourCount( copy.getSmoothingLengthNeighbourCount() );
+#endif
   setPartid( copy.getPartid() );
   setBalsara( copy.getBalsara() );
   setRot_v( copy.getRot_v() );
@@ -203,6 +209,10 @@ std::string tests::swift2::testSML1D::globaldata::hydroPart::toString() const {
   // out << "isBoundaryParticle=" << _isBoundaryParticle;
   // out << ",";
   out << "smoothingLengthConverged=" << _smoothingLengthConverged;
+#if PeanoDebug > 0
+  out << ",";
+  out << "smoothingLengthNeighbourCount=" << _smoothingLengthNeighbourCount;
+#endif
   out << ",";
   out << "partid=" << _partid;
   out << ",";
@@ -635,6 +645,20 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setSmoothingLengthConver
 }
 
 
+#if PeanoDebug > 0
+int   tests::swift2::testSML1D::globaldata::hydroPart::getSmoothingLengthNeighbourCount() const {
+  return _smoothingLengthNeighbourCount;
+}
+
+
+void   tests::swift2::testSML1D::globaldata::hydroPart::setSmoothingLengthNeighbourCount(int value) {
+  _smoothingLengthNeighbourCount = value;
+}
+
+
+#endif
+
+
 int   tests::swift2::testSML1D::globaldata::hydroPart::getPartid() const {
   return _partid;
 }
@@ -1037,6 +1061,9 @@ void tests::swift2::testSML1D::globaldata::hydroPart::initDatatype() {
   NumberOfAttributes++;
   NumberOfAttributes++;
   NumberOfAttributes++;
+#if PeanoDebug > 0
+  NumberOfAttributes++;
+#endif
   NumberOfAttributes++;
   NumberOfAttributes++;
   NumberOfAttributes++;
@@ -1155,6 +1182,11 @@ void tests::swift2::testSML1D::globaldata::hydroPart::initDatatype() {
   subtypes[counter] = MPI_BYTE;
   blocklen[counter] = 1;
   counter++;
+#if PeanoDebug > 0
+  subtypes[counter] = MPI_INT;
+  blocklen[counter] = 1;
+  counter++;
+#endif
   subtypes[counter] = MPI_INT;
   blocklen[counter] = 1;
   counter++;
@@ -1275,6 +1307,11 @@ void tests::swift2::testSML1D::globaldata::hydroPart::initDatatype() {
   counter++;
   MPI_Get_address( &(instances[0]._smoothingLengthConverged = false), &disp[counter] );
   counter++;
+
+#if PeanoDebug > 0
+  MPI_Get_address( &(instances[0]._smoothingLengthNeighbourCount), &disp[counter] );
+  counter++;
+#endif
   MPI_Get_address( &(instances[0]._partid), &disp[counter] );
   counter++;
   MPI_Get_address( &(instances[0]._balsara), &disp[counter] );
