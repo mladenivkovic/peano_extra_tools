@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <iomanip>
 #include <list>
 #include <functional>
 
@@ -30,9 +31,11 @@ void setStaticParams(int dimension){
   if (dimension == 1){
     hydroPart::_hydroDimensions = 1;
     hydroPart::_etaFactor = 2.5819884616099626;
+    hydroPart::_smlMax = 0.05;
   } else if (dimension == 2){
     hydroPart::_hydroDimensions = 2;
     hydroPart::_etaFactor = 1.2761313865909358;
+    hydroPart::_smlMax = 0.20;
   } else {
     std::cerr << "Invalid number of dimensions: "<< dimension << std::endl;
     std::abort();
@@ -40,7 +43,6 @@ void setStaticParams(int dimension){
 
   hydroPart::_smlMaxIterations = 50;
   hydroPart::_smlMin = 1e-06;
-  hydroPart::_smlMax = 0.05;
   hydroPart::_smlTolerance = 1e-06;
 }
 
@@ -160,11 +162,13 @@ void setStaticParams(int dimension){
       double h = localParticle->getSmoothingLength();
       double diff = std::abs(h/h_solution - 1.);
       if ( diff > 1e-5) {
+        std::cout << std::setprecision(6);
         std::cout << "ERROR: Smoothing lengths don't agree. ";
         std::cout << " Got: h=" << h << "; ";
         std::cout << " Expect: h=" << h_solution << "; ";
         std::cout << " Ratio: h=" << h/h_solution << "; ";
         std::cout << " Error: h=" << diff << std::endl;
+        std::cout << localParticle->toString() << std::endl;
       }
 
       mindiff = std::min(diff, mindiff);

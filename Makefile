@@ -17,8 +17,12 @@ LDFLAGS += -L/home/mivkov/Durham/Peano/src  -L/home/mivkov/Durham/Peano/src/tool
 LIBS= -lm
 LIBS += -L../../../../src -lSWIFT2Core2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts   -lToolboxParticles2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts -lhdf5_hl_cpp -lhdf5_cpp -lhdf5_hl -lhdf5 -lstdc++
 
-HEADERS=myconfig.h ICUniform1D.h ICDisplaced1D.h hydroPart.h smlUnitTest.h
-OBJECTS=hydroPart.o
+HEADERS=myconfig.h ICUniform1D.h ICDisplaced1D.h ./ICMultilevelDisplaced1D.h ./ICUniform2D.h hydroPart.h smlUnitTest.h
+OBJECTS=
+
+DEF1D=-DHYDRO_DIMENSION=1 -Dimensions=2
+DEF2D=-DHYDRO_DIMENSION=2 -Dimensions=2
+DEF3D=-DHYDRO_DIMENSION=3 -Dimensions=3
 
 CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(LIBS) 
 
@@ -26,15 +30,20 @@ CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(
 # ---------------------------------------------------------
 
 
-default: test
+default: test1D test2D
 
 
-hydroPart.o: hydroPart.cpp hydroPart.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+hydroPart1D.o: hydroPart.cpp hydroPart.h
+	$(CXX) $(CXXFLAGS) $(DEF1D) -c $< -o $@
 
-test: main.cpp $(HEADERS) $(OBJECTS)
-	$(CXX) $(OBJECTS) $(CXXFLAGS) $< -o $@
+hydroPart2D.o: hydroPart.cpp hydroPart.h
+	$(CXX) $(CXXFLAGS) $(DEF2D) -c $< -o $@
 
+test1D: test1D.cpp $(HEADERS) $(OBJECTS) hydroPart1D.o
+	$(CXX) $(OBJECTS) $(DEF1D) hydroPart1D.o $(CXXFLAGS) $< -o $@
+
+test2D: test2D.cpp $(HEADERS) $(OBJECTS) hydroPart2D.o
+	$(CXX) $(OBJECTS) $(DEF2D) hydroPart2D.o $(CXXFLAGS) $< -o $@
 
 clean:
-	rm -f *.o test
+	rm -f *.o test1D test2D

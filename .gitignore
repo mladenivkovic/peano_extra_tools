@@ -1,3 +1,6 @@
 test
 compile_commands.json
 *.o
+test1D
+test2D
+test3D

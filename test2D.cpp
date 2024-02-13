@@ -10,13 +10,6 @@
 
 int main(void){
 
-  smlUnitTest::setStaticParams(1);
-
-  smlUnitTest::runTest(initialConditions::oneDim::ICUniform());
-  smlUnitTest::runTest(initialConditions::oneDim::ICDisplaced());
-  smlUnitTest::runTest(initialConditions::oneDim::ICMultilevelDisplaced());
-
-
   // 2D tests
   smlUnitTest::setStaticParams(2);
   smlUnitTest::runTest(initialConditions::twoDim::ICUniform());
