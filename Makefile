@@ -1,6 +1,7 @@
 PEANO_ROOT=/home/mivkov/Durham/Peano/src
 
 OPTFLAGS = -Og -g 			# debug
+# OPTFLAGS += -fsanitize=address
 WFLAGS=   -Wall -Wextra -pedantic -Wno-gcc-compat -Wno-unused-command-line-argument -Wno-unused-parameter 
 WFLAGS+=  -Wno-tautological-constant-compare  -Wno-ignored-attributes  -Wno-unknown-attributes  
 WFLAGS+=  -Wno-zero-length-array -Wno-mismatched-tags -Wno-unused

@@ -4,3 +4,4 @@ compile_commands.json
 test1D
 test2D
 test3D
+.cache

@@ -101,11 +101,27 @@ namespace smlUnitTest {
       part->setV(2, 0.);
 #endif
 
+      part->setSmoothingLengthIterCount(0);
+
+      ::swift2::kernels::legacy::hydro_prepare_density(part);
 
       particleList.push_back(part);
     }
 
     return particleList;
+  }
+
+
+
+  /**
+   * Clean up allocated particles from the list.
+   **/
+  void cleanParticleList(std::list<hydroPart*> particleList){
+
+    for (auto part: particleList){
+      delete part;
+    }
+    particleList.clear();
   }
 
 
@@ -149,7 +165,8 @@ namespace smlUnitTest {
     }
     int error = 0;
 
-    // Main loop
+    // Main loop: Over all particles
+    // -----------------------------
     for (int localParticleIndex = start; localParticleIndex < stop; localParticleIndex++){
       // We could to this for all particles simultaneously, but I don't want to.
       // Go particle by particle.
@@ -157,23 +174,28 @@ namespace smlUnitTest {
       hydroPart *localParticle = getLocalParticle(particleList, localParticleIndex);
       double h_solution = ic.sml_solution[localParticleIndex];
 
+      // Main smoothing length iteration loop
+      // ------------------------------------
       int iteration = 0;
       while (iteration < hydroPart::getSmlMaxIterations() ){
         iteration++;
         // this flag determines whether we reiterate or not.
         localParticle->getSpecies().clearRerunPreviousGridSweepFlag();
 
+        // Setup
         for (hydroPart* particle : particleList) {
           ::swift2::kernels::legacy::hydro_prepare_density(particle);
         }
 
+        // Neighbour loop
         for (hydroPart* activeParticle : particleList) {
           ::swift2::kernels::legacy::density_kernel(localParticle, activeParticle);
         }
 
+        // Finish and do Newton-Raphson iteration.
         swift2::kernels::legacy::hydro_update_smoothing_length_and_rerun_if_required(localParticle);
 
-
+        // Are we done?
         if (not localParticle->getSpecies().rerunPreviousGridSweep()) break;
       }
 
@@ -182,7 +204,7 @@ namespace smlUnitTest {
         std::cout << localParticle->getSmoothingLengthIterCount() << std::endl;
       } else {
         if (verbose){
-          std::cout << "Finished (converged) after " << iteration << " iterations" << std::endl;
+          std::cout << "Particle " << localParticle->getPartid() << " converged after " << iteration << " iterations" << std::endl;
         }
       }
 
@@ -204,12 +226,14 @@ namespace smlUnitTest {
 
     }
 
-    std::cout << "Diff min=" << mindiff << "; max=" << maxdiff << "\n";
+    std::cout << "Finished. Diff min=" << mindiff << "; max=" << maxdiff << "\n";
     if (error) {
       std::cout << "Found " << error << " errors for " << ic.name << ". Exiting.";
       std::exit(error);
     }
 
+    // Clean up after yourself.
+    cleanParticleList(particleList);
 
   }
 } // namespace smlUnitTest
