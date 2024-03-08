@@ -26,27 +26,39 @@ namespace smlUnitTest {
   /**
    * Set some global/static parameters.
    */
-  void setStaticParams(int dimension){
+  template <typename IC>
+  void setStaticParams(int dimension, IC ic){
 
     if (dimension == 1){
       hydroPart::_hydroDimensions = 1;
-      hydroPart::_etaFactor = 2.5819884616099626;
+      hydroPart::_etaFactor = ic.resolution_eta;;
       hydroPart::_smlMin = 1e-06;
       hydroPart::_smlMax = 0.05;
-      hydroPart::_smlMaxIterations = 50;
-      hydroPart::_smlTolerance = 1e-06;
+      hydroPart::_smlTolerance = ic.h_tolerance;
+    hydroPart::_smlMaxIterations = 50;
     } else if (dimension == 2){
       hydroPart::_hydroDimensions = 2;
-      hydroPart::_etaFactor = 1.2761313865909358;
+      hydroPart::_etaFactor = ic.resolution_eta;
       hydroPart::_smlMin = 1e-06;
       hydroPart::_smlMax = 0.20;
       hydroPart::_smlMaxIterations = 50;
-      hydroPart::_smlTolerance = 1e-06;
+      hydroPart::_smlTolerance = ic.h_tolerance;
     } else {
       std::cerr << "Invalid number of dimensions: "<< dimension << std::endl;
       std::abort();
     }
 
+    // SML min and max are supposed to be global simulation parameters, not
+    // really something we determine from ICs. However, we can make sure
+    // that the ICs don't encroach on these limits.
+    if (hydroPart::_smlMin > ic.h_min) {
+      std::cerr << "Error: hydroPart::_smlMin < h_min in ICs" << std::endl;
+      std::abort();
+    }
+    if (hydroPart::_smlMax < ic.h_max) {
+      std::cerr << "Error: hydroPart::_smlMin < h_min in ICs" << std::endl;
+      std::abort();
+    }
   }
 
 
@@ -89,8 +101,8 @@ namespace smlUnitTest {
       part->setPartid(ic.ids[p]);
 
       // TODO: TEMPORARY
-      // part->setSearchRadius(1.);
-      part->setSearchRadius(1.54919353837087214742e-01);
+      part->setSearchRadius(1.);
+      // part->setSearchRadius(1.54919353837087214742e-01);
       part->setMass(1.);
       part->setPressure(1.);
       part->setU(1.);
@@ -144,7 +156,7 @@ namespace smlUnitTest {
    * @param verbose if true, print additional info to screen
    */
   template <typename IC>
-  void runTest(IC ic, bool check_all, bool verbose){
+  void runTest(IC ic, int dimension, bool check_all, bool verbose){
 
     // Talk to me
     std::cout << "Running '" << ic.name << "'\n";
@@ -154,6 +166,7 @@ namespace smlUnitTest {
 
     // Set up
     std::list<hydroPart*> particleList = initParticles(ic);
+    setStaticParams(dimension, ic);
 
     if (ic.sampleSize <= 20) {
       std::cerr << "IC sample size must be > 20, is=" << ic.sampleSize << std::endl;
@@ -175,6 +188,9 @@ namespace smlUnitTest {
       // Go particle by particle.
 
       hydroPart *localParticle = getLocalParticle(particleList, localParticleIndex);
+
+      // if (localParticle->getPartid() != 836) continue;
+
       double h_solution = ic.sml_solution[localParticleIndex];
 
       // Main smoothing length iteration loop
@@ -209,6 +225,7 @@ namespace smlUnitTest {
         if (verbose){
           std::cout << "Particle " << localParticle->getPartid() << " converged after " << iteration << " iterations" << std::endl;
         }
+
       }
 
       double h = localParticle->getSmoothingLength();
@@ -219,7 +236,7 @@ namespace smlUnitTest {
         std::cout << " Got: h=" << h << "; ";
         std::cout << " Expect: h=" << h_solution << "; ";
         std::cout << " Ratio: h=" << h/h_solution << "; ";
-        std::cout << " Error: h=" << diff << std::endl;
+        std::cout << " Error: diff=" << diff << std::endl;
         std::cout << localParticle->toString() << std::endl;
         error++;
       }
