@@ -187,6 +187,7 @@ namespace smlUnitTest {
       stop = ic.sampleSize;
     }
     int error = 0;
+    int max_iterations = 0;
 
     // Main loop: Over all particles
     // -----------------------------
@@ -232,6 +233,8 @@ namespace smlUnitTest {
         if (not localParticle->getSpecies().rerunPreviousGridSweep()) break;
       }
 
+      max_iterations = std::max(max_iterations, iteration);
+
       if (iteration == hydroPart::getSmlMaxIterations()) {
         std::cout << "Error: did not converge after " << iteration << " iterations" << std::endl;
         std::cout << localParticle->getSmoothingLengthIterCount() << std::endl;
@@ -260,7 +263,7 @@ namespace smlUnitTest {
 
     }
 
-    std::cout << "Finished. Diff min=" << mindiff << "; max=" << maxdiff << "\n";
+    std::cout << "Finished. Diff min=" << mindiff << "; max=" << maxdiff << "; max nr iterations=" << max_iterations << "\n";
     if (error) {
       std::cout << "Found " << error << " errors for " << ic.name << ". Exiting.";
       std::exit(error);

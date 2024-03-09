@@ -10,7 +10,6 @@ namespace initialConditions {
 public:
       std::string name = "3D Uniform";
 
-
       // File: Peano/tests/swift2/test-smoothing-length-computation/test-smoothing-length-computation-3D/test_sml_3D.hdf5
       // Random Seed: 30997
       // Kernel: quartic_spline
