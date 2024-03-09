@@ -165,8 +165,15 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     static double   getBetaAV();
     double   getBalsara() const;
     void   setBalsara(double value);
+#if Dimensions < 3
     double   getRot_v() const;
     void   setRot_v(double value);
+#else
+    tarch::la::Vector<Dimensions,double>   getRot_v() const;
+    void   setRot_v(const tarch::la::Vector<Dimensions,double>& value);
+    double   getRot_v(int index) const;
+    void   setRot_v(int index, double value);
+#endif
     double   getDiv_v() const;
     void   setDiv_v(double value);
     double   getV_sig_AV() const;
@@ -358,7 +365,11 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
       inline const static double   _betaAV = 3.0;
 
       double   _balsara;
+#if Dimensions < 3
       double   _rot_v;
+#else
+    tarch::la::Vector<Dimensions,double>   _rot_v;
+#endif
       double   _div_v;
       double   _v_sig_AV;
       double   _soundSpeed;

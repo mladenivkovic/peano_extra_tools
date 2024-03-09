@@ -31,7 +31,7 @@ CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(
 # ---------------------------------------------------------
 
 
-default: test1D test2D
+default: test1D test2D test3D
 
 
 hydroPart1D.o: hydroPart.cpp hydroPart.h
@@ -40,11 +40,16 @@ hydroPart1D.o: hydroPart.cpp hydroPart.h
 hydroPart2D.o: hydroPart.cpp hydroPart.h
 	$(CXX) $(CXXFLAGS) $(DEF2D) -c $< -o $@
 
+hydroPart3D.o: hydroPart.cpp hydroPart.h
+	$(CXX) $(CXXFLAGS) $(DEF3D) -c $< -o $@
+
 test1D: test1D.cpp $(HEADERS) $(OBJECTS) hydroPart1D.o
 	$(CXX) $(OBJECTS) $(DEF1D) hydroPart1D.o $(CXXFLAGS) $< -o $@
 
 test2D: test2D.cpp $(HEADERS) $(OBJECTS) hydroPart2D.o
 	$(CXX) $(OBJECTS) $(DEF2D) hydroPart2D.o $(CXXFLAGS) $< -o $@
 
+test3D: test3D.cpp $(HEADERS) $(OBJECTS) hydroPart3D.o
+	$(CXX) $(OBJECTS) $(DEF3D) hydroPart3D.o $(CXXFLAGS) $< -o $@
 clean:
-	rm -f *.o test1D test2D
+	rm -f *.o test1D test2D test3D

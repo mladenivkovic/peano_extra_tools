@@ -43,6 +43,13 @@ namespace smlUnitTest {
       hydroPart::_smlMax = 0.20;
       hydroPart::_smlMaxIterations = 50;
       hydroPart::_smlTolerance = ic.h_tolerance;
+    } else if (dimension == 3){
+      hydroPart::_hydroDimensions = 3;
+      hydroPart::_etaFactor = ic.resolution_eta;
+      hydroPart::_smlMin = 1e-06;
+      hydroPart::_smlMax = 0.20;
+      hydroPart::_smlMaxIterations = 50;
+      hydroPart::_smlTolerance = ic.h_tolerance;
     } else {
       std::cerr << "Invalid number of dimensions: "<< dimension << std::endl;
       std::abort();
@@ -216,7 +223,7 @@ namespace smlUnitTest {
 
         // TODO: temporary
         // I'm calling hydro_end_density_copy in hydro_update_smoothing_length_and_rerun_if_required()
-        // swift2::kernels::legacy::hydro_end_density(localParticle);
+        swift2::kernels::legacy::hydro_end_density(localParticle);
 
         // Finish and do Newton-Raphson iteration.
         swift2::kernels::legacy::hydro_update_smoothing_length_and_rerun_if_required(localParticle);

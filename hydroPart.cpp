@@ -734,6 +734,7 @@ void   tests::swift2::testSML1D::globaldata::hydroPart::setBalsara(double value)
 }
 
 
+#if Dimensions < 3
 double   tests::swift2::testSML1D::globaldata::hydroPart::getRot_v() const {
   return _rot_v;
 }
@@ -742,6 +743,25 @@ double   tests::swift2::testSML1D::globaldata::hydroPart::getRot_v() const {
 void   tests::swift2::testSML1D::globaldata::hydroPart::setRot_v(double value) {
   _rot_v = value;
 }
+#else
+
+tarch::la::Vector<Dimensions,double>   tests::swift2::testSML1D::globaldata::hydroPart::getRot_v() const {
+  return   _rot_v;
+}
+
+
+void   tests::swift2::testSML1D::globaldata::hydroPart::setRot_v(const tarch::la::Vector<Dimensions,double>& value) {
+  _rot_v = value;
+}
+
+
+double   tests::swift2::testSML1D::globaldata::hydroPart::getRot_v(int index) const {
+  return   _rot_v(index);
+}
+
+#endif
+
+
 
 
 double   tests::swift2::testSML1D::globaldata::hydroPart::getDiv_v() const {
