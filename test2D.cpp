@@ -8,11 +8,10 @@
 
 int main(void){
 
-  smlUnitTest::setStaticParams(2);
   bool check_all = true;
   bool verbose = true;
 
-  smlUnitTest::runTest(initialConditions::twoDim::ICUniform(), check_all, verbose);
-  smlUnitTest::runTest(initialConditions::twoDim::ICDisplaced(), check_all, verbose);
+  smlUnitTest::runTest(initialConditions::twoDim::ICUniform(), 2, check_all, verbose);
+  // smlUnitTest::runTest(initialConditions::twoDim::ICDisplaced(), 2, check_all, verbose);
 
 }

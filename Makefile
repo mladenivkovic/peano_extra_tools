@@ -31,7 +31,7 @@ CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(
 # ---------------------------------------------------------
 
 
-default: test1D
+default: test1D test2D
 
 
 hydroPart1D.o: hydroPart.cpp hydroPart.h
