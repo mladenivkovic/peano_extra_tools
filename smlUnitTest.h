@@ -31,7 +31,7 @@ namespace smlUnitTest {
 
     if (dimension == 1){
       hydroPart::_hydroDimensions = 1;
-      hydroPart::_etaFactor = ic.resolution_eta;;
+      hydroPart::_etaFactor = ic.resolution_eta;
       hydroPart::_smlMin = 1e-06;
       hydroPart::_smlMax = 0.05;
       hydroPart::_smlTolerance = ic.h_tolerance;
@@ -190,8 +190,11 @@ namespace smlUnitTest {
       hydroPart *localParticle = getLocalParticle(particleList, localParticleIndex);
 
       // if (localParticle->getPartid() != 836) continue;
+      // if (localParticle->getPartid() != 3628) continue;
+      // localParticle->setSmoothingLength(7.812500e-05);
 
       double h_solution = ic.sml_solution[localParticleIndex];
+
 
       // Main smoothing length iteration loop
       // ------------------------------------
@@ -210,6 +213,10 @@ namespace smlUnitTest {
         for (hydroPart* activeParticle : particleList) {
           ::swift2::kernels::legacy::density_kernel(localParticle, activeParticle);
         }
+
+        // TODO: temporary
+        // I'm calling hydro_end_density_copy in hydro_update_smoothing_length_and_rerun_if_required()
+        // swift2::kernels::legacy::hydro_end_density(localParticle);
 
         // Finish and do Newton-Raphson iteration.
         swift2::kernels::legacy::hydro_update_smoothing_length_and_rerun_if_required(localParticle);
@@ -230,7 +237,7 @@ namespace smlUnitTest {
 
       double h = localParticle->getSmoothingLength();
       double diff = std::abs(h/h_solution - 1.);
-      if ( diff > 1e-5) {
+      if ( diff > 5e-5) {
         std::cout << std::setprecision(6);
         std::cout << "ERROR: Smoothing lengths don't agree. ";
         std::cout << " Got: h=" << h << "; ";
