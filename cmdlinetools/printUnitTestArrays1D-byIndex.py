@@ -19,7 +19,7 @@ import swift2.sphtools
 
 #  file = "test_sml_1D.hdf5"
 file = "test_sml_multiscale_1D.hdf5"
-h_tolerance = 1.e-12
+h_tolerance = 1.e-6
 kernel = "quartic_spline"
 ndim = 1
 
@@ -29,8 +29,11 @@ nneigh = swift2.sphtools.number_of_neighbours_from_eta(
     )
 
 # start and end of indexes of particle array to take
-x_start = 0.75
-x_end = 0.9
+index_start = 0
+index_end = 4000
+#  index_start = 800
+#  index_end = 850
+size = index_end - index_start
 
 
 
@@ -56,30 +59,22 @@ random_seed = f["Header"].attrs["RandomSeed"]
 f.close()
 
 
-mask = coords[:,0] > x_start
-mask = np.logical_and(mask, coords[:,0] < x_end)
-
-ids = ids[mask]
-coords = coords[mask]
-sml_ic = sml_ic[mask]
-
-
-# Sort by particle position
-sort_ic = np.argsort(coords[:,0])
-
+# Sort by particle ID
+sort_ic = np.argsort(ids)
 ids = ids[sort_ic]
 coords = coords[sort_ic]
 sml_ic = sml_ic[sort_ic]
 
-
+ids = ids[index_start:index_end]
+coords = coords[index_start:index_end, :]
+sml_ic = sml_ic[index_start:index_end]
 
 
 # Get expected results
 # -------------------------
 
 tree = KDTree(coords)
-#  distances, indexes = tree.query(coords, k=2*nneigh + 10 * ndim)
-distances, indexes = tree.query(coords, k=500)
+distances, indexes = tree.query(coords, k=nneigh + 10 * ndim)
 neighbours = coords[indexes]
 
 npart = coords.shape[0]
@@ -90,17 +85,13 @@ for i in range(npart):
     # it is stored at the first index, with distance 0.
     xp = neighbours[i, 0, :]
     xn = neighbours[i, 1:, :]
-
-    if ids[i] != 3628: continue
     h = swift2.sphtools.find_smoothing_length(
-        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=ids[i]==3628
+        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim
     )
     sml_python[i] = h
-quit()
 
 
 indent = "      "
-size = ids.shape[0]
 print("=================================================================")
 
 
@@ -110,9 +101,8 @@ if filepath.startswith("/home/mivkov/Durham/"):
     filepath = filepath[len("/home/mivkov/Durham/"):]
 print(indent+"// File: " + filepath)
 print(indent+f"// Random Seed: {random_seed}")
-print(indent+f"// Kernel: {kernel}")
-print(indent+f"// IC particle position start: {x_start}")
-print(indent+f"// IC particle position end: {x_end}")
+print(indent+f"// IC particle index start: {index_start}")
+print(indent+f"// IC particle index end: {index_end}")
 print()
 
 print(indent+f"int sampleSize = {size};")
@@ -120,16 +110,10 @@ print()
 print(indent+f"int indexBegin = 10;")
 print(indent+f"int indexEnd = {size-10};")
 print()
-print(indent+f"double h_tolerance = {h_tolerance};")
-print(indent+f"double resolution_eta = {eta};")
-print()
-print(indent+f"double h_min = {sml_python.min()};")
-print(indent+f"double h_max = {sml_python.max()};")
-print()
 print(indent+f"double coords[{size}][3] = {{")
-
+#  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
-    if i != size - 1:
+    if i != index_end - 1:
         comma = ","
     else:
         comma = ""
@@ -147,9 +131,9 @@ print()
 print()
 
 print(indent+f"int ids[{size}] = {{")
-#  for i in range(index_start, size):
+#  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
-    if i != size - 1:
+    if i != index_end - 1:
         comma = ","
     else:
         comma = ""
@@ -163,8 +147,9 @@ print()
 
 
 print(indent+f"double sml_init[{size}] = {{")
+#  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
-    if i != size - 1:
+    if i != index_end - 1:
         comma = ","
     else:
         comma = ""
@@ -175,8 +160,9 @@ print(indent+"};")
 print()
 
 print(indent+f"double sml_solution[{size}] = {{")
+#  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
-    if i != size - 1:
+    if i != index_end - 1:
         comma = ","
     else:
         comma = ""
