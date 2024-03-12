@@ -14,6 +14,7 @@ import os
 import peano4
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
 import swift2.sphtools
+import multiprocessing
 
 
 
@@ -78,25 +79,28 @@ sml_ic = sml_ic[sort_ic]
 # -------------------------
 
 tree = KDTree(coords)
-#  distances, indexes = tree.query(coords, k=2*nneigh + 10 * ndim)
-distances, indexes = tree.query(coords, k=500)
+distances, indexes = tree.query(coords, k=2*nneigh + 10 * ndim)
 neighbours = coords[indexes]
 
 npart = coords.shape[0]
 sml_python = np.zeros((npart))
 
-for i in range(npart):
+
+def sml_search(i):
     # the KDTree returns the particle itself as a neighbour too.
     # it is stored at the first index, with distance 0.
     xp = neighbours[i, 0, :]
     xn = neighbours[i, 1:, :]
 
-    if ids[i] != 3628: continue
+    verb = False
     h = swift2.sphtools.find_smoothing_length(
-        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=ids[i]==3628
+        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=verb
     )
-    sml_python[i] = h
-quit()
+    return h
+
+
+pool = multiprocessing.Pool()
+sml_python[:] = pool.map(sml_search, (i for i in range(npart)))
 
 
 indent = "      "

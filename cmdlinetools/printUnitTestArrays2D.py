@@ -14,13 +14,14 @@ import os
 import peano4
 from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVTUReader
 import swift2.sphtools
+import multiprocessing
 
 
 
-file = "test_sml_2D.hdf5"
-#  file = "test_sml_multiscale_1D.hdf5"
+#  file = "test_sml_2D.hdf5"
+file = "test_sml_multiscale_2D.hdf5"
 h_tolerance = 1.e-6
-kernel = "quartic_spline"
+kernel = "quartic_spline_vectorized"
 ndim = 2
 
 eta = 1.2761313865909358
@@ -66,7 +67,7 @@ sml_ic = sml_ic[sort_ic]
 # This is so that I don't have to modify the unit tests.
 
 
-dx_inner = 0.15
+dx_inner = 0.2
 dx_outer = 0.4
 
 
@@ -135,21 +136,28 @@ outer_mask = np.logical_and(outer_mask, np.logical_not(inner_mask))
 # -------------------------
 
 tree = KDTree(coords)
-distances, indexes = tree.query(coords, k=nneigh + 10 * ndim)
+distances, indexes = tree.query(coords, k=nneigh + 20 * ndim)
 neighbours = coords[indexes]
 
 npart = coords.shape[0]
 sml_python = np.zeros((npart))
 
-for i in range(npart):
+
+def sml_search(i):
     # the KDTree returns the particle itself as a neighbour too.
     # it is stored at the first index, with distance 0.
     xp = neighbours[i, 0, :]
     xn = neighbours[i, 1:, :]
+
+    verb = False
     h = swift2.sphtools.find_smoothing_length(
-        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim
+        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=verb
     )
-    sml_python[i] = h
+    return h
+
+
+pool = multiprocessing.Pool()
+sml_python[:] = pool.map(sml_search, (i for i in range(npart)))
 
 
 indent = "      "
@@ -162,6 +170,7 @@ if filepath.startswith("/home/mivkov/Durham/"):
     filepath = filepath[len("/home/mivkov/Durham/"):]
 print(indent+"// File: " + filepath)
 print(indent+f"// Random Seed: {random_seed}")
+print(indent+f"// Kernel: {kernel}")
 print(indent+f"// size of box for selected particles: {dx_inner}")
 print(indent+f"// size of box surrounding selected particles ('boundary particles'): {dx_outer}")
 print()
@@ -170,6 +179,12 @@ print(indent+f"int sampleSize = {size};")
 print()
 print(indent+f"int indexBegin = 0;")
 print(indent+f"int indexEnd = {count_inner};")
+print()
+print(indent+f"double h_tolerance = {h_tolerance};")
+print(indent+f"double resolution_eta = {eta};")
+print()
+print(indent+f"double h_min = {sml_python.min()};")
+print(indent+f"double h_max = {sml_python.max()};")
 print()
 print(indent+f"double coords[{size}][3] = {{")
 
