@@ -1,4 +1,4 @@
-#include "hydroPart.h"
+#include "HydroPart.h"
 
 #include "smlUnitTest.h"
 #include "ICUniform2D.h"

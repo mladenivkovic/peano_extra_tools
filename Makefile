@@ -1,5 +1,7 @@
 PEANO_ROOT=/home/mivkov/Durham/Peano/src
 
+CXX = /home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/gcc-14.0.1/intel-oneapi-compilers-2024.2.1-ysaj6erxyjcz2c3mvqd6pv2eyt3b3suu/compiler/2024.2/bin/icpx
+
 OPTFLAGS = -Og -g 			# debug
 # OPTFLAGS += -fsanitize=address
 WFLAGS=   -Wall -Wextra -pedantic -Wno-gcc-compat -Wno-unused-command-line-argument -Wno-unused-parameter 
@@ -12,11 +14,15 @@ INCLUDES=-I/$(PEANO_ROOT)
 INCLUDES+=-I/$(PEANO_ROOT)/
 
 
-LDFLAGS=-L/$(PEANO_ROOT)
-LDFLAGS += -L/home/mivkov/Durham/Peano/src  -L/home/mivkov/Durham/Peano/src/toolbox/loadbalancing  -L/home/mivkov/Durham/Peano/src/toolbox/blockstructured  -L/home/mivkov/Durham/Peano/src/toolbox/particles  -L/home/mivkov/Durham/Peano/src/swift2 -L//home/mivkov/local/spack/opt/spack/linux-ubuntu22.04-icelake/oneapi-2024.0.2/hdf5-1.12.2-nwvya6efp6jrgreywa6g2h4vcy7ygqct/lib -qopenmp
+# LDFLAGS=-L/$(PEANO_ROOT)
+LDFLAGS += -L/home/mivkov/Durham/Peano/src  -L/home/mivkov/Durham/Peano/src/toolbox/loadbalancing  -L/home/mivkov/Durham/Peano/src/toolbox/blockstructured  -L/home/mivkov/Durham/Peano/src/toolbox/particles  -L/home/mivkov/Durham/Peano/src/swift2 -L//home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/oneapi-2024.2.1/hdf5-1.14.3-pu54c7mxajmoxbye2gqeiah2vg4huaqq/lib -qopenmp
+LDFLAGS += -L/home/mivkov/Durham/Peano/src/tarch
+LDFLAGS += -L/home/mivkov/Durham/Peano/src/tarch/la
 
-LIBS= -lm
-LIBS += -L../../../../src -lSWIFT2Core2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts   -lToolboxParticles2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts -lhdf5_hl_cpp -lhdf5_cpp -lhdf5_hl -lhdf5 -lstdc++
+LIBS= -lm -lhdf5_hl_cpp -lhdf5_cpp -lhdf5_hl -lhdf5 -lstdc++
+LIBS += -L/$(PEANO_ROOT) -lSWIFT2Core2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts   -lToolboxParticles2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts
+
+# LIBS += -L/$(PEANO_ROOT) -lSWIFT2Core2d_debug  -lToolboxBlockstructured2d_debug  -lToolboxLoadBalancing2d_debug  -lPeano4Core2d_debug -lTarch_debug   -lToolboxParticles2d_debug  -lToolboxBlockstructured2d_debug  -lToolboxLoadBalancing2d_debug  -lPeano4Core2d_debug -lTarch_debug -lhdf5_hl_cpp -lhdf5_cpp -lhdf5_hl -lhdf5 -lstdc++
 
 HEADERS=myconfig.h ICUniform1D.h ICDisplaced1D.h ./ICMultilevelDisplaced1D.h ./ICUniform2D.h ./ICDisplaced2D.h ./ICMultilevelDisplaced2D.h HydroPart.h smlUnitTest.h
 OBJECTS=
@@ -35,21 +41,21 @@ default: test1D test2D test3D
 
 
 HydroPart1D.o: HydroPart.cpp HydroPart.h
-	$(CXX) $(CXXFLAGS) $(DEF1D) -c $< -o $@
+	$(CXX) $(DEF1D) -c $< -o $@  $(CXXFLAGS) 
 
 HydroPart2D.o: HydroPart.cpp HydroPart.h
-	$(CXX) $(CXXFLAGS) $(DEF2D) -c $< -o $@
+	$(CXX) $(DEF2D) -c $< -o $@ $(CXXFLAGS) 
 
 HydroPart3D.o: HydroPart.cpp HydroPart.h
-	$(CXX) $(CXXFLAGS) $(DEF3D) -c $< -o $@
+	$(CXX) $(DEF3D) -c $< -o $@ $(CXXFLAGS) 
 
 test1D: test1D.cpp $(HEADERS) $(OBJECTS) HydroPart1D.o
-	$(CXX) $(OBJECTS) $(DEF1D) HydroPart1D.o $(CXXFLAGS) $< -o $@
+	$(CXX) $(OBJECTS) $(DEF1D) HydroPart1D.o $< -o $@  $(CXXFLAGS) 
 
 test2D: test2D.cpp $(HEADERS) $(OBJECTS) HydroPart2D.o
-	$(CXX) $(OBJECTS) $(DEF2D) HydroPart2D.o $(CXXFLAGS) $< -o $@
+	$(CXX) $(OBJECTS) $(DEF2D) HydroPart2D.o $< -o $@ $(CXXFLAGS) 
 
 test3D: test3D.cpp $(HEADERS) $(OBJECTS) HydroPart3D.o
-	$(CXX) $(OBJECTS) $(DEF3D) HydroPart3D.o $(CXXFLAGS) $< -o $@
+	$(CXX) $(OBJECTS) $(DEF3D) HydroPart3D.o $< -o $@ $(CXXFLAGS) 
 clean:
 	rm -f *.o test1D test2D test3D

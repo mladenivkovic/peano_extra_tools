@@ -7,20 +7,20 @@
 
 
 #include "myconfig.h"
-#include "hydroPart.h"
+#include "HydroPart.h"
 
 
 
 
 #include "swift2/kernels/legacy/Density.h"
 #include "swift2/kernels/legacy/SmoothingLength.h"
+#include "swift2/kernels/legacy/Swift.h"
 #include "tarch/tarch.h"
-#include "tarch/la/la.h"
 
 
 namespace smlUnitTest {
 
-  using hydroPart = tests::swift2::testSML1D::globaldata::hydroPart;
+  using hydroPart = tests::swift2::testSML1D::globaldata::HydroPart;
 
 
   /**
@@ -123,9 +123,9 @@ namespace smlUnitTest {
 #endif
 
       part->setSmoothingLengthIterCount(0);
-      part->setSmoothingLengthNeighbourCount(0);
+      part->setDensityNeighbourCount(0);
 
-      ::swift2::kernels::legacy::hydro_prepare_density(part);
+      ::swift2::kernels::legacy::first_init_particle(part);
 
       particleList.push_back(part);
     }
@@ -164,6 +164,11 @@ namespace smlUnitTest {
    */
   template <typename IC>
   void runTest(IC ic, int dimension, bool check_all, bool verbose){
+
+    if (::tarch::la::greater(2.0, 1.0))
+      std::cout << "IT WORKS" << std::endl;
+
+    int whatever = tarch::la::sign(3.4);
 
     // Talk to me
     std::cout << "Running '" << ic.name << "'\n";
@@ -214,7 +219,7 @@ namespace smlUnitTest {
 
         // Setup
         for (hydroPart* particle : particleList) {
-          ::swift2::kernels::legacy::hydro_prepare_density(particle);
+          ::swift2::kernels::legacy::hydro_init_particle(particle);
         }
 
         // Neighbour loop
