@@ -18,7 +18,7 @@ LDFLAGS += -L/home/mivkov/Durham/Peano/src  -L/home/mivkov/Durham/Peano/src/tool
 LIBS= -lm
 LIBS += -L../../../../src -lSWIFT2Core2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts   -lToolboxParticles2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts -lhdf5_hl_cpp -lhdf5_cpp -lhdf5_hl -lhdf5 -lstdc++
 
-HEADERS=myconfig.h ICUniform1D.h ICDisplaced1D.h ./ICMultilevelDisplaced1D.h ./ICUniform2D.h ./ICDisplaced2D.h ./ICMultilevelDisplaced2D.h hydroPart.h smlUnitTest.h
+HEADERS=myconfig.h ICUniform1D.h ICDisplaced1D.h ./ICMultilevelDisplaced1D.h ./ICUniform2D.h ./ICDisplaced2D.h ./ICMultilevelDisplaced2D.h HydroPart.h smlUnitTest.h
 OBJECTS=
 
 DEF1D=-DHYDRO_DIMENSION=1 -DDimensions=2
@@ -34,22 +34,22 @@ CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(
 default: test1D test2D test3D
 
 
-hydroPart1D.o: hydroPart.cpp hydroPart.h
+HydroPart1D.o: HydroPart.cpp HydroPart.h
 	$(CXX) $(CXXFLAGS) $(DEF1D) -c $< -o $@
 
-hydroPart2D.o: hydroPart.cpp hydroPart.h
+HydroPart2D.o: HydroPart.cpp HydroPart.h
 	$(CXX) $(CXXFLAGS) $(DEF2D) -c $< -o $@
 
-hydroPart3D.o: hydroPart.cpp hydroPart.h
+HydroPart3D.o: HydroPart.cpp HydroPart.h
 	$(CXX) $(CXXFLAGS) $(DEF3D) -c $< -o $@
 
-test1D: test1D.cpp $(HEADERS) $(OBJECTS) hydroPart1D.o
-	$(CXX) $(OBJECTS) $(DEF1D) hydroPart1D.o $(CXXFLAGS) $< -o $@
+test1D: test1D.cpp $(HEADERS) $(OBJECTS) HydroPart1D.o
+	$(CXX) $(OBJECTS) $(DEF1D) HydroPart1D.o $(CXXFLAGS) $< -o $@
 
-test2D: test2D.cpp $(HEADERS) $(OBJECTS) hydroPart2D.o
-	$(CXX) $(OBJECTS) $(DEF2D) hydroPart2D.o $(CXXFLAGS) $< -o $@
+test2D: test2D.cpp $(HEADERS) $(OBJECTS) HydroPart2D.o
+	$(CXX) $(OBJECTS) $(DEF2D) HydroPart2D.o $(CXXFLAGS) $< -o $@
 
-test3D: test3D.cpp $(HEADERS) $(OBJECTS) hydroPart3D.o
-	$(CXX) $(OBJECTS) $(DEF3D) hydroPart3D.o $(CXXFLAGS) $< -o $@
+test3D: test3D.cpp $(HEADERS) $(OBJECTS) HydroPart3D.o
+	$(CXX) $(OBJECTS) $(DEF3D) HydroPart3D.o $(CXXFLAGS) $< -o $@
 clean:
 	rm -f *.o test1D test2D test3D

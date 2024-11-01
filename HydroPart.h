@@ -41,7 +41,7 @@ namespace swift2{
 namespace testSML1D{
 namespace globaldata{
 
-  struct hydroPart;
+  struct HydroPart;
 }
 }
 }
@@ -49,7 +49,7 @@ namespace globaldata{
 
 
 
-struct tests::swift2::testSML1D::globaldata::hydroPart {
+struct tests::swift2::testSML1D::globaldata::HydroPart {
   public:
 
     enum class ParallelState: int {
@@ -62,14 +62,14 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
       touchVertexFirstTime=0, cellKernel=1, touchVertexLastTime=2, count=3
     };
     enum class DependencyChecksAlgorithmStepLastUpdated: int {
-      Drift=0, PredictHydro=1, DensityLoopWithConstantSearchRadius=2, ForceLoop=3, Kick2=4, ReduceGlobalQuantities=5, Kick1=6, count=7
+      SPH_Drift=0, PredictHydro=1, SPH_DensityLoopWithConstantSearchRadius=2, SPH_ForceLoop=3, SPH_Kick2=4, SPH_Timestep=5, SPH_ReduceGlobalQuantities=6, SPH_Kick1=7, count=8
     };
     enum class DependencyChecksInitStepLastUpdated: int {
-      count=0
+      SPH_FirstInitParticle=0, SPH_DensityLoopWithConstantSearchRadius=1, SPH_ForceLoop=2, SPH_Timestep=3, count=4
     };
 
-    hydroPart() {}
-    hydroPart(tarch::la::Vector<Dimensions,double>  __debugX, tarch::la::Vector<Dimensions,double>  __debugH, tarch::la::Vector<Dimensions,double>  __x, tarch::la::Vector<Dimensions,double>  __cellH, double  __searchRadius, ParallelState  __ParallelState, MoveState  __MoveState, bool  __CellHasUpdatedParticle, double  __mass, tarch::la::Vector<Dimensions,double>  __v, tarch::la::Vector<Dimensions,double>  __a, double  __density, double  __pressure, double  __smoothingLength, double  __u, double  __uDot, tarch::la::Vector<Dimensions,double>  __v_full, double  __u_full, double  __wcount, double  __wcount_dh, double  __f, double  __hDot, double  __rho_dh, int  __smoothingLengthIterCount, bool  __hasNoNeighbours, bool  __isBoundaryParticle, bool  __smoothingLengthConverged, int  __smoothingLengthNeighbourCount, int  __partid, double  __balsara, double  __rot_v, double  __div_v, double  __v_sig_AV, double  __soundSpeed, DependencyChecksPeanoEventUsedBySwift  __dependencyChecksPeanoEventUsedBySwift, DependencyChecksAlgorithmStepLastUpdated  __dependencyChecksAlgorithmStepLastUpdated, int  __dependencyChecksAlgorithmStepUpdates[21], int  __dependencyChecksAlgorithmStepMaskOuts[21], DependencyChecksInitStepLastUpdated  __dependencyChecksInitStepLastUpdated, int  __dependencyChecksInitStepUpdates[0], int  __dependencyChecksInitStepMaskOuts[0]);
+    HydroPart() {}
+    HydroPart(tarch::la::Vector<Dimensions,double>  __debugX, tarch::la::Vector<Dimensions,double>  __debugH, tarch::la::Vector<Dimensions,double>  __x, tarch::la::Vector<Dimensions,double>  __cellH, double  __searchRadius, int  __partid, ParallelState  __ParallelState, MoveState  __MoveState, bool  __CellHasUpdatedParticle, double  __mass, tarch::la::Vector<Dimensions,double>  __v, tarch::la::Vector<Dimensions,double>  __a, double  __density, double  __pressure, double  __smoothingLength, double  __u, double  __uDot, tarch::la::Vector<Dimensions,double>  __v_full, double  __u_full, double  __wcount, double  __wcount_dh, double  __f, double  __hDot, double  __rho_dh, int  __smoothingLengthIterCount, double  __smlIterLeftBound, double  __smlIterRightBound, bool  __hasNoNeighbours, bool  __smoothingLengthConverged, int  __densityNeighbourCount, int  __forceNeighbourCount, double  __balsara, double  __rot_v, double  __div_v, double  __v_sig_AV, double  __soundSpeed, DependencyChecksPeanoEventUsedBySwift  __dependencyChecksPeanoEventUsedBySwift, DependencyChecksAlgorithmStepLastUpdated  __dependencyChecksAlgorithmStepLastUpdated, int  __dependencyChecksAlgorithmStepUpdates[24], int  __dependencyChecksAlgorithmStepMaskOuts[24], DependencyChecksInitStepLastUpdated  __dependencyChecksInitStepLastUpdated, int  __dependencyChecksInitStepUpdates[12], int  __dependencyChecksInitStepMaskOuts[12]);
 
 
 #if PeanoDebug>0
@@ -94,12 +94,16 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     void   setCellH(int index, double value);
     double   getSearchRadius() const;
     void   setSearchRadius(double value);
-    tests::swift2::testSML1D::globaldata::hydroPart::ParallelState   getParallelState() const;
+#if PeanoDebug > 0
+    int   getPartid() const;
+    void   setPartid(int value);
+#endif
+    tests::swift2::testSML1D::globaldata::HydroPart::ParallelState   getParallelState() const;
     void   setParallelState(ParallelState value);
-    const static std::string   toString(ParallelState value);
-    tests::swift2::testSML1D::globaldata::hydroPart::MoveState   getMoveState() const;
+    static std::string   toString(ParallelState value);
+    tests::swift2::testSML1D::globaldata::HydroPart::MoveState   getMoveState() const;
     void   setMoveState(MoveState value);
-    const static std::string   toString(MoveState value);
+    static std::string   toString(MoveState value);
     bool   getCellHasUpdatedParticle() const;
     void   setCellHasUpdatedParticle(bool value);
     double   getMass() const;
@@ -140,18 +144,22 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     void   setRho_dh(double value);
     int   getSmoothingLengthIterCount() const;
     void   setSmoothingLengthIterCount(int value);
+    double   getSmlIterLeftBound() const;
+    void   setSmlIterLeftBound(double value);
+    double   getSmlIterRightBound() const;
+    void   setSmlIterRightBound(double value);
     bool   getHasNoNeighbours() const;
     void   setHasNoNeighbours(bool value);
-    bool   getIsBoundaryParticle() const;
-    void   setIsBoundaryParticle(bool value);
     bool   getSmoothingLengthConverged() const;
     void   setSmoothingLengthConverged(bool value);
 #if PeanoDebug > 0
-    int   getSmoothingLengthNeighbourCount() const;
-    void   setSmoothingLengthNeighbourCount(int value);
+    int   getDensityNeighbourCount() const;
+    void   setDensityNeighbourCount(int value);
 #endif
-    int   getPartid() const;
-    void   setPartid(int value);
+#if PeanoDebug > 0
+    int   getForceNeighbourCount() const;
+    void   setForceNeighbourCount(int value);
+#endif
     static double   getCfl();
     static double   getInitialTimeStepSize();
     static bool   getAdjustTimeStepSize();
@@ -165,6 +173,7 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     static double   getBetaAV();
     double   getBalsara() const;
     void   setBalsara(double value);
+// Manual changes to allow for different dimensions in this unit test
 #if Dimensions < 3
     double   getRot_v() const;
     void   setRot_v(double value);
@@ -181,45 +190,45 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     double   getSoundSpeed() const;
     void   setSoundSpeed(double value);
 #if PeanoDebug > 0
-    tests::swift2::testSML1D::globaldata::hydroPart::DependencyChecksPeanoEventUsedBySwift   getDependencyChecksPeanoEventUsedBySwift() const;
+    tests::swift2::testSML1D::globaldata::HydroPart::DependencyChecksPeanoEventUsedBySwift   getDependencyChecksPeanoEventUsedBySwift() const;
     void   setDependencyChecksPeanoEventUsedBySwift(DependencyChecksPeanoEventUsedBySwift value);
-    const static std::string   toString(DependencyChecksPeanoEventUsedBySwift value);
+    static std::string   toString(DependencyChecksPeanoEventUsedBySwift value);
 #endif
 #if PeanoDebug > 0
-    tests::swift2::testSML1D::globaldata::hydroPart::DependencyChecksAlgorithmStepLastUpdated   getDependencyChecksAlgorithmStepLastUpdated() const;
+    tests::swift2::testSML1D::globaldata::HydroPart::DependencyChecksAlgorithmStepLastUpdated   getDependencyChecksAlgorithmStepLastUpdated() const;
     void   setDependencyChecksAlgorithmStepLastUpdated(DependencyChecksAlgorithmStepLastUpdated value);
-    const static std::string   toString(DependencyChecksAlgorithmStepLastUpdated value);
+    static std::string   toString(DependencyChecksAlgorithmStepLastUpdated value);
 #endif
 #if PeanoDebug > 0
     const int*   getDependencyChecksAlgorithmStepUpdates() const;
-    void   setDependencyChecksAlgorithmStepUpdates(const int value[21]);
+    void   setDependencyChecksAlgorithmStepUpdates(const int value[24]);
     int   getDependencyChecksAlgorithmStepUpdates(int index) const;
     void   setDependencyChecksAlgorithmStepUpdates(int index, int value);
 #endif
 #if PeanoDebug > 0
     const int*   getDependencyChecksAlgorithmStepMaskOuts() const;
-    void   setDependencyChecksAlgorithmStepMaskOuts(const int value[21]);
+    void   setDependencyChecksAlgorithmStepMaskOuts(const int value[24]);
     int   getDependencyChecksAlgorithmStepMaskOuts(int index) const;
     void   setDependencyChecksAlgorithmStepMaskOuts(int index, int value);
 #endif
 #if PeanoDebug > 0
-    tests::swift2::testSML1D::globaldata::hydroPart::DependencyChecksInitStepLastUpdated   getDependencyChecksInitStepLastUpdated() const;
+    tests::swift2::testSML1D::globaldata::HydroPart::DependencyChecksInitStepLastUpdated   getDependencyChecksInitStepLastUpdated() const;
     void   setDependencyChecksInitStepLastUpdated(DependencyChecksInitStepLastUpdated value);
-    const static std::string   toString(DependencyChecksInitStepLastUpdated value);
+    static std::string   toString(DependencyChecksInitStepLastUpdated value);
 #endif
 #if PeanoDebug > 0
     const int*   getDependencyChecksInitStepUpdates() const;
-    void   setDependencyChecksInitStepUpdates(const int value[0]);
+    void   setDependencyChecksInitStepUpdates(const int value[12]);
     int   getDependencyChecksInitStepUpdates(int index) const;
     void   setDependencyChecksInitStepUpdates(int index, int value);
 #endif
 #if PeanoDebug > 0
     const int*   getDependencyChecksInitStepMaskOuts() const;
-    void   setDependencyChecksInitStepMaskOuts(const int value[0]);
+    void   setDependencyChecksInitStepMaskOuts(const int value[12]);
     int   getDependencyChecksInitStepMaskOuts(int index) const;
     void   setDependencyChecksInitStepMaskOuts(int index, int value);
 #endif
-    hydroPart(const hydroPart& copy);
+    HydroPart(const HydroPart& copy);
 
 
     #ifdef Parallel
@@ -283,8 +292,8 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
      * including a vtable. So this routine now is basically an alias for a
      * blocking MPI_Send.
      */
-    static void send(const tests::swift2::testSML1D::globaldata::hydroPart& buffer, int destination, int tag, MPI_Comm communicator );
-    static void receive(tests::swift2::testSML1D::globaldata::hydroPart& buffer, int source, int tag, MPI_Comm communicator );
+    static void send(const tests::swift2::testSML1D::globaldata::HydroPart& buffer, int destination, int tag, MPI_Comm communicator );
+    static void receive(tests::swift2::testSML1D::globaldata::HydroPart& buffer, int source, int tag, MPI_Comm communicator );
 
     /**
      * Alternative to the other send() where I trigger a non-blocking send an
@@ -292,8 +301,8 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
      * the message went through. In systems with heavy MPI usage, this can
      * help to avoid deadlocks.
      */
-    static void send(const tests::swift2::testSML1D::globaldata::hydroPart& buffer, int destination, int tag, std::function<void()> startCommunicationFunctor, std::function<void()> waitFunctor, MPI_Comm communicator );
-    static void receive(   tests::swift2::testSML1D::globaldata::hydroPart& buffer, int source,      int tag, std::function<void()> startCommunicationFunctor, std::function<void()> waitFunctor, MPI_Comm communicator );
+    static void send(const tests::swift2::testSML1D::globaldata::HydroPart& buffer, int destination, int tag, std::function<void()> startCommunicationFunctor, std::function<void()> waitFunctor, MPI_Comm communicator );
+    static void receive(   tests::swift2::testSML1D::globaldata::HydroPart& buffer, int source,      int tag, std::function<void()> startCommunicationFunctor, std::function<void()> waitFunctor, MPI_Comm communicator );
     #endif
 
 
@@ -301,12 +310,12 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
       NoData
     };
 
-    hydroPart( ObjectConstruction ):
-        hydroPart() {}
+    HydroPart( ObjectConstruction ):
+        HydroPart() {}
 
 #ifdef Parallel
-    static void sendAndPollDanglingMessages(const tests::swift2::testSML1D::globaldata::hydroPart& message, int destination, int tag, MPI_Comm communicator=tarch::mpi::Rank::getInstance().getCommunicator());
-    static void receiveAndPollDanglingMessages(tests::swift2::testSML1D::globaldata::hydroPart& message, int source, int tag, MPI_Comm communicator=tarch::mpi::Rank::getInstance().getCommunicator() );
+    static void sendAndPollDanglingMessages(const tests::swift2::testSML1D::globaldata::HydroPart& message, int destination, int tag, MPI_Comm communicator=tarch::mpi::Rank::getInstance().getCommunicator());
+    static void receiveAndPollDanglingMessages(tests::swift2::testSML1D::globaldata::HydroPart& message, int source, int tag, MPI_Comm communicator=tarch::mpi::Rank::getInstance().getCommunicator() );
 #endif
 
 
@@ -315,6 +324,7 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
 
     std::string toString() const;
 
+    // Changed these variables to non-const so I can modify it on-the-fly.
     static double   _hydroDimensions;
     static double   _etaFactor;
     static double   _smlMin;
@@ -332,6 +342,9 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     tarch::la::Vector<Dimensions,double>   _x;
     tarch::la::Vector<Dimensions,double>   _cellH;
       double   _searchRadius;
+#if PeanoDebug > 0
+      int   _partid = -1;
+#endif
     [[clang::pack]]  ParallelState   _ParallelState;
     [[clang::pack]]  MoveState   _MoveState;
     [[clang::pack]]  bool   _CellHasUpdatedParticle;
@@ -340,7 +353,7 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     tarch::la::Vector<Dimensions,double>   _a;
       double   _density;
       double   _pressure;
-      double   _smoothingLength;
+      double   _smoothingLength = 0.0;
       double   _u;
       double   _uDot;
     tarch::la::Vector<Dimensions,double>   _v_full;
@@ -351,13 +364,16 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
       double   _hDot;
       double   _rho_dh;
       int   _smoothingLengthIterCount;
+      double   _smlIterLeftBound;
+      double   _smlIterRightBound;
     [[clang::pack]]  bool   _hasNoNeighbours;
-    [[clang::pack]]  bool   _isBoundaryParticle;
     [[clang::pack]]  bool   _smoothingLengthConverged = false;
 #if PeanoDebug > 0
-      int   _smoothingLengthNeighbourCount;
+      int   _densityNeighbourCount;
 #endif
-      int   _partid;
+#if PeanoDebug > 0
+      int   _forceNeighbourCount;
+#endif
       inline const static double   _cfl = 1e-06;
       inline const static double   _initialTimeStepSize = 1e-06;
       inline const static bool   _adjustTimeStepSize = false;
@@ -380,19 +396,19 @@ struct tests::swift2::testSML1D::globaldata::hydroPart {
     [[clang::pack]]  DependencyChecksAlgorithmStepLastUpdated   _dependencyChecksAlgorithmStepLastUpdated;
 #endif
 #if PeanoDebug > 0
-      int   _dependencyChecksAlgorithmStepUpdates[21];
+      int   _dependencyChecksAlgorithmStepUpdates[24];
 #endif
 #if PeanoDebug > 0
-      int   _dependencyChecksAlgorithmStepMaskOuts[21];
+      int   _dependencyChecksAlgorithmStepMaskOuts[24];
 #endif
 #if PeanoDebug > 0
     [[clang::pack]]  DependencyChecksInitStepLastUpdated   _dependencyChecksInitStepLastUpdated;
 #endif
 #if PeanoDebug > 0
-      int   _dependencyChecksInitStepUpdates[0];
+      int   _dependencyChecksInitStepUpdates[12];
 #endif
 #if PeanoDebug > 0
-      int   _dependencyChecksInitStepMaskOuts[0];
+      int   _dependencyChecksInitStepMaskOuts[12];
 #endif
 
 
