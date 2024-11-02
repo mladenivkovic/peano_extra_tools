@@ -3,15 +3,13 @@
 #include "InitialConditions.h"
 
 namespace initialConditions {
-  namespace oneDim {
 
-    extern struct InitialConditions ICUniform1D;
-    extern struct InitialConditions ICDisplaced1D;
-    extern struct InitialConditions ICMultilevelDisplaced1D;
+  extern struct InitialConditions ICUniform1D;
+  extern struct InitialConditions ICDisplaced1D;
+  extern struct InitialConditions ICMultilevelDisplaced1D;
 
-    struct InitialConditions getUniform1DIC(void);
-    struct InitialConditions getDisplaced1DIC(void);
-    struct InitialConditions getMultileveDisplaced1DIC(void);
+  struct InitialConditions getUniform1DIC(void);
+  struct InitialConditions getDisplaced1DIC(void);
+  struct InitialConditions getMultileveDisplaced1DIC(void);
 
-  } // namespace oneDim
 } // namespace initialConditions

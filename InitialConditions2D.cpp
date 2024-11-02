@@ -4,12 +4,12 @@
 
 namespace ic = initialConditions;
 
-struct ic::InitialConditions ic::twoDim::ICUniform2D = ic::twoDim::getUniform2DIC();
-struct ic::InitialConditions ic::twoDim::ICDisplaced2D = ic::twoDim::getDisplaced2DIC();
-struct ic::InitialConditions ic::twoDim::ICMultilevelDisplaced2D = ic::twoDim::getMultileveDisplaced2DIC();
+struct ic::InitialConditions ic::ICUniform2D = ic::getUniform2DIC();
+struct ic::InitialConditions ic::ICDisplaced2D = ic::getDisplaced2DIC();
+struct ic::InitialConditions ic::ICMultilevelDisplaced2D = ic::getMultileveDisplaced2DIC();
 
 
-struct ic::InitialConditions ic::twoDim::getUniform2DIC(void){
+struct ic::InitialConditions ic::getUniform2DIC(void){
 
   struct InitialConditions IC;
 
@@ -1076,7 +1076,7 @@ struct ic::InitialConditions ic::twoDim::getUniform2DIC(void){
 }
 
 
-struct ic::InitialConditions ic::twoDim::getDisplaced2DIC(void){
+struct ic::InitialConditions ic::getDisplaced2DIC(void){
 
   struct InitialConditions IC;
 
@@ -2142,7 +2142,7 @@ struct ic::InitialConditions ic::twoDim::getDisplaced2DIC(void){
 
 
 
-struct ic::InitialConditions ic::twoDim::getMultileveDisplaced2DIC(void){
+struct ic::InitialConditions ic::getMultileveDisplaced2DIC(void){
 
   struct InitialConditions IC;
 

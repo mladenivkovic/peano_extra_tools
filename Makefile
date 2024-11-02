@@ -22,7 +22,7 @@ LDFLAGS += -L/home/mivkov/Durham/Peano/src/tarch/la
 LIBS= -lm -lhdf5_hl_cpp -lhdf5_cpp -lhdf5_hl -lhdf5 -lstdc++
 LIBS += -L/$(PEANO_ROOT) -lSWIFT2Core2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts   -lToolboxParticles2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts
 
-HEADERS=myconfig.h InitialConditions.h InitialConditions1D.h HydroPart.h smlUnitTest.h
+HEADERS=myconfig.h InitialConditions.h InitialConditions1D.h InitialConditions2D.h InitialConditions3D.h HydroPart.h smlUnitTest.h
 OBJECTS=
 
 DEF1D=-DHYDRO_DIMENSION=1 -DDimensions=2
@@ -35,7 +35,7 @@ CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(
 # ---------------------------------------------------------
 
 
-default: test3D 
+default: test1D 
 # default: test1D test2D test3D
 
 
@@ -60,15 +60,24 @@ InitialConditions3D.o: InitialConditions3D.cpp InitialConditions3D.h InitialCond
 	$(CXX) $(DEF3D) -c $< -o $@ $(CXXFLAGS) 
 
 
+smlUnitTest1D.o: smlUnitTest.cpp smlUnitTest.h
+	$(CXX) $(DEF1D) -c $< -o $@ $(CXXFLAGS) 
 
-test1D: test1D.cpp $(HEADERS) $(OBJECTS) HydroPart1D.o InitialConditions1D.o
-	$(CXX) $(OBJECTS) $(DEF1D) HydroPart1D.o InitialConditions1D.o $< -o $@ $(CXXFLAGS)
+smlUnitTest2D.o: smlUnitTest.cpp smlUnitTest.h
+	$(CXX) $(DEF2D) -c $< -o $@ $(CXXFLAGS) 
 
-test2D: test2D.cpp $(HEADERS) $(OBJECTS) HydroPart2D.o InitialConditions2D.o
-	$(CXX) $(OBJECTS) $(DEF2D) HydroPart2D.o InitialConditions2D.o $< -o $@ $(CXXFLAGS) 
+smlUnitTest3D.o: smlUnitTest.cpp smlUnitTest.h
+	$(CXX) $(DEF3D) -c $< -o $@ $(CXXFLAGS) 
 
-test3D: test3D.cpp $(HEADERS) $(OBJECTS) HydroPart3D.o InitialConditions3D.o
-	$(CXX) $(OBJECTS) $(DEF3D) HydroPart3D.o InitialConditions3D.o $< -o $@ $(CXXFLAGS) 
+
+test1D: test1D.cpp $(HEADERS) $(OBJECTS) HydroPart1D.o InitialConditions1D.o smlUnitTest1D.o
+	$(CXX) $(OBJECTS) $(DEF1D) HydroPart1D.o InitialConditions1D.o smlUnitTest1D.o $< -o $@ $(CXXFLAGS)
+
+test2D: test2D.cpp $(HEADERS) $(OBJECTS) HydroPart2D.o InitialConditions2D.o smlUnitTest2D.o
+	$(CXX) $(OBJECTS) $(DEF2D) HydroPart2D.o InitialConditions2D.o smlUnitTest2D.o $< -o $@ $(CXXFLAGS) 
+
+test3D: test3D.cpp $(HEADERS) $(OBJECTS) HydroPart3D.o InitialConditions3D.o smlUnitTest3D.o
+	$(CXX) $(OBJECTS) $(DEF3D) HydroPart3D.o InitialConditions3D.o smlUnitTest3D.o $< -o $@ $(CXXFLAGS) 
 
 
 

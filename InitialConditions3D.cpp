@@ -4,12 +4,12 @@
 
 namespace ic = initialConditions;
 
-struct ic::InitialConditions ic::threeDim::ICUniform3D = ic::threeDim::getUniform3DIC();
-struct ic::InitialConditions ic::threeDim::ICDisplaced3D = ic::threeDim::getDisplaced3DIC();
-struct ic::InitialConditions ic::threeDim::ICMultilevelDisplaced3D = ic::threeDim::getMultileveDisplaced3DIC();
+struct ic::InitialConditions ic::ICUniform3D = ic::getUniform3DIC();
+struct ic::InitialConditions ic::ICDisplaced3D = ic::getDisplaced3DIC();
+struct ic::InitialConditions ic::ICMultilevelDisplaced3D = ic::getMultileveDisplaced3DIC();
 
 
-struct ic::InitialConditions ic::threeDim::getUniform3DIC(void){
+struct ic::InitialConditions ic::getUniform3DIC(void){
 
   struct InitialConditions IC;
 
@@ -4050,7 +4050,7 @@ struct ic::InitialConditions ic::threeDim::getUniform3DIC(void){
 }
 
 
-struct ic::InitialConditions ic::threeDim::getDisplaced3DIC(void){
+struct ic::InitialConditions ic::getDisplaced3DIC(void){
 
   struct InitialConditions IC;
 
@@ -4588,7 +4588,7 @@ struct ic::InitialConditions ic::threeDim::getDisplaced3DIC(void){
 
 
 
-struct ic::InitialConditions ic::threeDim::getMultileveDisplaced3DIC(void){
+struct ic::InitialConditions ic::getMultileveDisplaced3DIC(void){
 
   struct InitialConditions IC;
 

@@ -9,8 +9,8 @@ int main(void){
   bool verbose = true;
   bool abort_on_error = true;
 
-  smlUnitTest::runTest(initialConditions::twoDim::ICUniform2D, 2, check_all, verbose, abort_on_error);
-  smlUnitTest::runTest(initialConditions::twoDim::ICDisplaced2D, 2, check_all, verbose, abort_on_error);
-  smlUnitTest::runTest(initialConditions::twoDim::ICMultilevelDisplaced2D, 2, check_all, verbose, abort_on_error);
+  smlUnitTest::runTest(initialConditions::ICUniform2D, 2, check_all, verbose, abort_on_error);
+  smlUnitTest::runTest(initialConditions::ICDisplaced2D, 2, check_all, verbose, abort_on_error);
+  smlUnitTest::runTest(initialConditions::ICMultilevelDisplaced2D, 2, check_all, verbose, abort_on_error);
 
 }
