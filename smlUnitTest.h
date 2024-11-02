@@ -8,6 +8,7 @@
 
 #include "myconfig.h"
 #include "HydroPart.h"
+#include "InitialConditions.h"
 
 
 
@@ -16,6 +17,7 @@
 #include "swift2/kernels/legacy/SmoothingLength.h"
 #include "swift2/kernels/legacy/Swift.h"
 #include "tarch/tarch.h"
+
 
 
 namespace smlUnitTest {
@@ -161,9 +163,9 @@ namespace smlUnitTest {
    * with particles around the edges that don't have enough neighbours, as
    * we're not doing periodic boundary conditions here.
    * @param verbose if true, print additional info to screen
+   * @param abort_on_error if true, abort on first error
    */
-  template <typename IC>
-  void runTest(IC ic, int dimension, bool check_all, bool verbose){
+  void runTest(struct initialConditions::InitialConditions ic, int dimension, bool check_all, bool verbose, bool abort_on_error){
 
     if (::tarch::la::greater(2.0, 1.0))
       std::cout << "IT WORKS" << std::endl;
