@@ -1,6 +1,4 @@
 #include "InitialConditions1D.h"
-#include "ICMultilevelDisplaced1D.h"
-#include "InitialConditions.h"
 #include <string>
 #include <vector>
 

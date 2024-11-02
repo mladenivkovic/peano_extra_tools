@@ -35,7 +35,7 @@ CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(
 # ---------------------------------------------------------
 
 
-default: test1D 
+default: test3D 
 # default: test1D test2D test3D
 
 
@@ -49,18 +49,27 @@ HydroPart3D.o: HydroPart.cpp HydroPart.h
 	$(CXX) $(DEF3D) -c $< -o $@ $(CXXFLAGS) 
 
 
+
 InitialConditions1D.o: InitialConditions1D.cpp InitialConditions1D.h InitialConditions.h
+	$(CXX) $(DEF1D) -c $< -o $@ $(CXXFLAGS) 
+
+InitialConditions2D.o: InitialConditions2D.cpp InitialConditions2D.h InitialConditions.h
+	$(CXX) $(DEF2D) -c $< -o $@ $(CXXFLAGS) 
+
+InitialConditions3D.o: InitialConditions3D.cpp InitialConditions3D.h InitialConditions.h
 	$(CXX) $(DEF3D) -c $< -o $@ $(CXXFLAGS) 
 
 
+
 test1D: test1D.cpp $(HEADERS) $(OBJECTS) HydroPart1D.o InitialConditions1D.o
-	$(CXX) $(OBJECTS) $(DEF1D) $< -o $@  $(CXXFLAGS)  HydroPart1D.o InitialConditions1D.o 
+	$(CXX) $(OBJECTS) $(DEF1D) HydroPart1D.o InitialConditions1D.o $< -o $@ $(CXXFLAGS)
 
-test2D: test2D.cpp $(HEADERS) $(OBJECTS) HydroPart2D.o
-	$(CXX) $(OBJECTS) $(DEF2D) HydroPart2D.o $< -o $@ $(CXXFLAGS) 
+test2D: test2D.cpp $(HEADERS) $(OBJECTS) HydroPart2D.o InitialConditions2D.o
+	$(CXX) $(OBJECTS) $(DEF2D) HydroPart2D.o InitialConditions2D.o $< -o $@ $(CXXFLAGS) 
 
-test3D: test3D.cpp $(HEADERS) $(OBJECTS) HydroPart3D.o
-	$(CXX) $(OBJECTS) $(DEF3D) HydroPart3D.o $< -o $@ $(CXXFLAGS) 
+test3D: test3D.cpp $(HEADERS) $(OBJECTS) HydroPart3D.o InitialConditions3D.o
+	$(CXX) $(OBJECTS) $(DEF3D) HydroPart3D.o InitialConditions3D.o $< -o $@ $(CXXFLAGS) 
+
 
 
 clean:

@@ -1,9 +1,7 @@
 #include "HydroPart.h"
 
 #include "smlUnitTest.h"
-#include "ICUniform3D.h"
-#include "ICDisplaced3D.h"
-#include "ICMultilevelDisplaced3D.h"
+#include "InitialConditions3D.h"
 
 
 
@@ -11,9 +9,10 @@ int main(void){
 
   bool check_all = false;
   bool verbose = false;
+  bool abort_on_error = true;
 
-  smlUnitTest::runTest(initialConditions::threeDim::ICUniform(), 3, check_all, verbose);
-  smlUnitTest::runTest(initialConditions::threeDim::ICDisplaced(), 3, check_all, verbose);
-  smlUnitTest::runTest(initialConditions::threeDim::ICMultilevelDisplaced(), 3, check_all, verbose);
+  smlUnitTest::runTest(initialConditions::threeDim::ICUniform3D, 3, check_all, verbose, abort_on_error);
+  smlUnitTest::runTest(initialConditions::threeDim::ICDisplaced3D, 3, check_all, verbose, abort_on_error);
+  smlUnitTest::runTest(initialConditions::threeDim::ICMultilevelDisplaced3D, 3, check_all, verbose, abort_on_error);
 
 }

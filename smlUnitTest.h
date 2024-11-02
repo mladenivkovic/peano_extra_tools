@@ -167,11 +167,6 @@ namespace smlUnitTest {
    */
   void runTest(struct initialConditions::InitialConditions ic, int dimension, bool check_all, bool verbose, bool abort_on_error){
 
-    if (::tarch::la::greater(2.0, 1.0))
-      std::cout << "IT WORKS" << std::endl;
-
-    int whatever = tarch::la::sign(3.4);
-
     // Talk to me
     std::cout << "Running '" << ic.name << "'\n";
 
@@ -203,10 +198,6 @@ namespace smlUnitTest {
       // Go particle by particle.
 
       hydroPart *localParticle = getLocalParticle(particleList, localParticleIndex);
-
-      // if (localParticle->getPartid() != 836) continue;
-      // if (localParticle->getPartid() != 3628) continue;
-      // localParticle->setSmoothingLength(7.812500e-05);
 
       double h_solution = ic.sml_solution[localParticleIndex];
 
