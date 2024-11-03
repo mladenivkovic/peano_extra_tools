@@ -29,7 +29,7 @@ namespace smlUnitTest {
       hydroPart::_smlMin = 1e-06;
       hydroPart::_smlMax = 0.05;
       hydroPart::_smlTolerance = ic.h_tolerance;
-    hydroPart::_smlMaxIterations = 50;
+      hydroPart::_smlMaxIterations = 50;
     } else if (dimension == 2){
       hydroPart::_hydroDimensions = 2;
       hydroPart::_etaFactor = ic.resolution_eta;
@@ -66,14 +66,9 @@ namespace smlUnitTest {
   /**
    * Grab the pointer to a specific particle
    **/
-  hydroPart* getLocalParticle(std::list<hydroPart*> particleList, int index){
+  hydroPart* getLocalParticle(std::vector<hydroPart*> particleList, int index){
 
-    int j = 0;
-    for (std::list<hydroPart*>::iterator i = particleList.begin(); i != particleList.end(); i++){
-      if (j == index) return *i;
-      j++;
-    }
-    return nullptr;
+    return particleList[index];
   }
 
 
@@ -81,9 +76,9 @@ namespace smlUnitTest {
   /**
    * Generate particles, and return list of pointers to them.
    **/
-  std::list<hydroPart*> initParticles(struct initialConditions::InitialConditions ic){
+  std::vector<hydroPart*> initParticles(struct initialConditions::InitialConditions ic){
 
-    std::list<hydroPart*> particleList;
+    std::vector<hydroPart*> particleList;
 
     for (int p = 0; p < ic.sampleSize; p++){
 
@@ -97,7 +92,7 @@ namespace smlUnitTest {
       part->setX(2, ic.coords[p][2]);
 #endif
 
-      part->setSmoothingLength(ic.sml_init[p]);
+      part->setSmoothingLength(ic.sml_init[p] * 1.25);
       part->setPartid(ic.ids[p]);
 
       // TODO: TEMPORARY
@@ -131,7 +126,7 @@ namespace smlUnitTest {
   /**
    * Clean up allocated particles from the list.
    **/
-  void cleanParticleList(std::list<hydroPart*> particleList){
+  void cleanParticleList(std::vector<hydroPart*> particleList){
 
     for (auto part: particleList){
       delete part;
@@ -165,8 +160,9 @@ namespace smlUnitTest {
     double maxdiff = -1.;
 
     // Set up
-    std::list<hydroPart*> particleList = initParticles(ic);
+    // needs to be done before initParticles()
     setStaticParams(dimension, ic);
+    std::vector<hydroPart*> particleList = initParticles(ic);
 
     if (ic.sampleSize <= 20) {
       std::cerr << "IC sample size must be > 20, is=" << ic.sampleSize << std::endl;
@@ -214,7 +210,6 @@ namespace smlUnitTest {
         // TODO: temporary
         // I'm calling hydro_end_density_copy in hydro_update_smoothing_length_and_rerun_if_required()
         swift2::kernels::legacy::hydro_end_density(localParticle);
-
         // Finish and do Newton-Raphson iteration.
         swift2::kernels::legacy::hydro_update_smoothing_length_and_rerun_if_required(localParticle);
 
@@ -231,7 +226,6 @@ namespace smlUnitTest {
         if (verbose){
           std::cout << "Particle " << localParticle->getPartid() << " converged after " << iteration << " iterations" << std::endl;
         }
-
       }
 
       double h = localParticle->getSmoothingLength();
@@ -245,6 +239,7 @@ namespace smlUnitTest {
         std::cout << " Error: diff=" << diff << std::endl;
         std::cout << localParticle->toString() << std::endl;
         error++;
+        if (abort_on_error) std::abort();
       }
 
       mindiff = std::min(diff, mindiff);

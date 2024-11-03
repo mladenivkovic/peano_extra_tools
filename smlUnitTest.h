@@ -1,6 +1,6 @@
 #pragma once
 
-#include <list>
+#include <vector>
 #include <functional>
 
 
@@ -30,19 +30,19 @@ namespace smlUnitTest {
   /**
    * Grab the pointer to a specific particle
    **/
-  hydroPart* getLocalParticle(std::list<hydroPart*> particleList, int index);
+  hydroPart* getLocalParticle(std::vector<hydroPart*> particleList, int index);
 
 
   /**
    * Generate particles, and return list of pointers to them.
    **/
-  std::list<hydroPart*> initParticles(struct initialConditions::InitialConditions ic);
+  std::vector<hydroPart*> initParticles(struct initialConditions::InitialConditions ic);
 
 
   /**
    * Clean up allocated particles from the list.
    **/
-  void cleanParticleList(std::list<hydroPart*> particleList);
+  void cleanParticleList(std::vector<hydroPart*> particleList);
 
 
   /**

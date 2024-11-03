@@ -20,7 +20,7 @@ LDFLAGS += -L/home/mivkov/Durham/Peano/src/tarch
 LDFLAGS += -L/home/mivkov/Durham/Peano/src/tarch/la
 
 LIBS= -lm -lhdf5_hl_cpp -lhdf5_cpp -lhdf5_hl -lhdf5 -lstdc++
-LIBS += -L/$(PEANO_ROOT) -lSWIFT2Core2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts   -lToolboxParticles2d_asserts  -lToolboxBlockstructured2d_asserts  -lToolboxLoadBalancing2d_asserts  -lPeano4Core2d_asserts -lTarch_asserts
+LIBS += -L/$(PEANO_ROOT) -lSWIFT2Core2d_debug  -lToolboxBlockstructured2d_debug  -lToolboxLoadBalancing2d_debug  -lPeano4Core2d_debug -lTarch_debug   -lToolboxParticles2d_debug  -lToolboxBlockstructured2d_debug  -lToolboxLoadBalancing2d_debug  -lPeano4Core2d_debug -lTarch_debug
 
 HEADERS=myconfig.h InitialConditions.h InitialConditions1D.h InitialConditions2D.h InitialConditions3D.h HydroPart.h smlUnitTest.h
 OBJECTS=
@@ -35,8 +35,7 @@ CXXFLAGS= $(OPTFLAGS) $(WFLAGS) $(FFLAGS) $(STDFLAGS)  $(INCLUDES) $(LDFLAGS) $(
 # ---------------------------------------------------------
 
 
-default: test1D 
-# default: test1D test2D test3D
+default: test1D test2D test3D
 
 
 HydroPart1D.o: HydroPart.cpp HydroPart.h

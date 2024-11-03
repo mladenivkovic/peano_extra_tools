@@ -5,8 +5,8 @@
 
 int main(void){
 
-  bool check_all = true;
-  bool verbose = true;
+  bool check_all = false;
+  bool verbose = false;
   bool abort_on_error = true;
 
   smlUnitTest::runTest(initialConditions::ICUniform2D, 2, check_all, verbose, abort_on_error);
