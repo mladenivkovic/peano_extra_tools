@@ -21,7 +21,7 @@ import multiprocessing
 #  file = "test_sml_1D.hdf5"
 file = "test_sml_multiscale_1D.hdf5"
 h_tolerance = 1.e-12
-kernel = "quartic_spline"
+kernel = "quartic_spline_vectorized"
 ndim = 1
 
 eta = 2.5819884616099626
