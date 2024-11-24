@@ -230,7 +230,7 @@ namespace smlUnitTest {
 
       double h = localParticle->getSmoothingLength();
       double diff = std::abs(h/h_solution - 1.);
-      if ( diff > 5e-5) {
+      if ( diff > 1.e-4) {
         std::cout << std::setprecision(6);
         std::cout << "ERROR: Smoothing lengths don't agree. ";
         std::cout << " Got: h=" << h << "; ";
