@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
 
-# -------------------------------------------
-# Extract and print data for unit test
-# -------------------------------------------
+# ------------------------------------------------------------
+# Extract and print data for smoothinglength unit test
+#
+# Intended to be run in Peano/tests/swift2/test-smoothing-length-computation/test-smoothing-length-computation-1D
+# Just comment/uncomment file you want to run, kernel to use, etc etc
+# ------------------------------------------------------------
 
 
 import h5py
@@ -24,18 +27,16 @@ h_tolerance = 1.e-6
 kernel = "quartic_spline_vectorized"
 ndim = 2
 
-eta = 1.2761313865909358
-nneigh = swift2.sphtools.number_of_neighbours_from_eta(
-    eta, kernel=kernel, ndim=ndim
-    )
+# target number of neighbours
+nneigh = [8, 15, 20]
+
+
 
 
 
 print(" --- IC file:                    ", file)
 print(" --- Dimensions:                 ", ndim)
 print(" --- SPH Kernel:                 ", kernel)
-print(" --- Target number of neighbours:", nneigh)
-print(" --- Target eta:                 ", eta)
 print(" --- h tolerance:                ", h_tolerance)
 
 
@@ -48,9 +49,13 @@ gas = f["PartType0"]
 coords = gas["Coordinates"][:]
 ids = gas["ParticleIDs"][:]
 sml_ic = gas["SmoothingLength"][:]
-random_seed = f["Header"].attrs["RandomSeed"]
 
 boxsize = f["Header"].attrs["BoxSize"]
+random_seed = f["Header"].attrs["RandomSeed"]
+max_displacement = f["Header"].attrs["MaxDisplacement"]
+numpy_version = f["Header"].attrs["NumpyVersion"]
+f.close()
+
 
 f.close()
 
@@ -130,137 +135,152 @@ outer_mask = np.logical_and(outer_mask, np.logical_not(inner_mask))
 
 
 
+# Main loop
+for n in nneigh:
+
+    eta = swift2.sphtools.eta_from_number_of_neighbours(n, kernel=kernel, ndim=ndim)
+
+    print(" --- Starting run for:")
+    print("     Target number of neighbours:", n)
+    print("     Target eta:                 ", eta)
+
+    outname = f"solution_n={n}-" + file.strip(".hdf5") + ".dat"
+
+    out = open(outname, "w")
 
 
-# Get expected results
-# -------------------------
+    # Get expected results
+    # -------------------------
 
-tree = KDTree(coords)
-distances, indexes = tree.query(coords, k=nneigh + 20 * ndim)
-neighbours = coords[indexes]
+    tree = KDTree(coords)
+    distances, indexes = tree.query(coords, k=n + 20 * ndim)
+    neighbours = coords[indexes]
 
-npart = coords.shape[0]
-sml_python = np.zeros((npart))
-
-
-def sml_search(i):
-    # the KDTree returns the particle itself as a neighbour too.
-    # it is stored at the first index, with distance 0.
-    xp = neighbours[i, 0, :]
-    xn = neighbours[i, 1:, :]
-
-    verb = False
-    h = swift2.sphtools.find_smoothing_length(
-        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=verb
-    )
-    return h
+    npart = coords.shape[0]
+    sml_python = np.zeros((npart))
 
 
-pool = multiprocessing.Pool()
-sml_python[:] = pool.map(sml_search, (i for i in range(npart)))
+    def sml_search(i):
+        # the KDTree returns the particle itself as a neighbour too.
+        # it is stored at the first index, with distance 0.
+        xp = neighbours[i, 0, :]
+        xn = neighbours[i, 1:, :]
+
+        verb = False
+        h = swift2.sphtools.find_smoothing_length(
+            xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=verb
+        )
+        return h
 
 
-indent = "      "
-print("=================================================================")
+    pool = multiprocessing.Pool()
+    sml_python[:] = pool.map(sml_search, (i for i in range(npart)))
 
 
-print()
-filepath = os.path.join(os.getcwd(), file)
-if filepath.startswith("/home/mivkov/Durham/"):
-    filepath = filepath[len("/home/mivkov/Durham/"):]
-print(indent+"// File: " + filepath)
-print(indent+f"// Random Seed: {random_seed}")
-print(indent+f"// Kernel: {kernel}")
-print(indent+f"// size of box for selected particles: {dx_inner}")
-print(indent+f"// size of box surrounding selected particles ('boundary particles'): {dx_outer}")
-print()
-
-print(indent+f"int sampleSize = {size};")
-print()
-print(indent+f"int indexBegin = 0;")
-print(indent+f"int indexEnd = {count_inner};")
-print()
-print(indent+f"double h_tolerance = {h_tolerance};")
-print(indent+f"double resolution_eta = {eta};")
-print()
-print(indent+f"double h_min = {sml_python.min()};")
-print(indent+f"double h_max = {sml_python.max()};")
-print()
-print(indent+f"double coords[{size}][3] = {{")
-
-for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
-    for i in range(count):
-        if i == count - 1 and is_last:
-            comma = ""
-        else:
-            comma = ","
-
-        c = coords[mask][i]
-        if c.shape[0] == 1:
-            print(indent+f"  {{ {c[0]:14.8e}, 0., 0. }}" + comma)
-        elif c.shape[0] == 2:
-            print(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, 0. }}" + comma)
-        elif c.shape[0] == 3:
-            print(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, {c[2]:14.8e} }}" + comma)
+    indent = "  "
+    out.write("\n")
+    out.write(indent+"struct InitialConditions IC;\n\n")
+    out.write(indent+f'IC.name = "{outname}";\n\n')
 
 
-print(indent+"};")
-print()
-print()
+    filepath = os.path.join(os.getcwd(), file)
+    if filepath.startswith("/home/mivkov/Durham/"):
+        filepath = filepath[len("/home/mivkov/Durham/"):]
+    out.write(indent+f"// File: {filepath}\n")
+    out.write(indent+f"// Random Seed: {random_seed}\n")
+    out.write(indent+f"// Kernel: {kernel}\n")
+    out.write(indent+f"// Numpy version: {numpy_version}\n")
+    out.write(indent+f"// Max displacement: {max_displacement}\n")
+    out.write(indent+f"// Size of inner square: {dx_inner}\n")
+    out.write(indent+f"// Size of outer square: {dx_outer}\n\n")
+
+    out.write(indent+f"IC.sampleSize = {size};\n\n")
+
+    out.write(indent+f"IC.indexBegin = 10;\n")
+    out.write(indent+f"IC.indexEnd = {size-10};\n\n")
+
+    out.write(indent+f"IC.h_tolerance = {h_tolerance};\n")
+    out.write(indent+f"IC.resolution_eta = {eta};\n\n")
+
+    out.write(indent+f"IC.h_min = {sml_python.min()};\n")
+    out.write(indent+f"IC.h_max = {sml_python.max()};\n\n")
+
+    out.write(indent+f"IC.coords = {{\n")
+
+    for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
+        for i in range(count):
+            if i == count - 1 and is_last:
+                comma = "\n"
+            else:
+                comma = ",\n"
+
+            c = coords[mask][i]
+            if c.shape[0] == 1:
+                out.write(indent+f"  {{ {c[0]:14.8e}, 0., 0. }}" + comma)
+            elif c.shape[0] == 2:
+                out.write(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, 0. }}" + comma)
+            elif c.shape[0] == 3:
+                out.write(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, {c[2]:14.8e} }}" + comma)
 
 
-# safety check
-ids_full = np.zeros(count_outer + count_inner, int)
-ind = 0
+    out.write(indent+"};\n\n")
 
-print(indent+f"int ids[{size}] = {{")
-for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
-    for i in range(count):
-        if i == count - 1 and is_last:
-            comma = ""
-        else:
-            comma = ","
 
-        c = ids[mask][i]
-        ids_full[ind] = c
-        ind += 1
-        print(indent+f"  {c}" + comma)
+    # safety check
+    ids_full = np.zeros(count_outer + count_inner, int)
+    ind = 0
 
-print(indent+"};")
-print()
-print()
+    out.write(indent+f"IC.ids = {{\n")
+    for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
+        for i in range(count):
+            if i == count - 1 and is_last:
+                comma = "\n"
+            else:
+                comma = ",\n"
 
-uniques = np.unique(ids_full)
-if uniques.shape != ids_full.shape:
-    raise ValueError("Have non-unique particle IDs")
+            c = ids[mask][i]
+            ids_full[ind] = c
+            ind += 1
+            out.write(indent+f"  {c}" + comma)
+
+    out.write(indent+"};\n\n")
+
+    uniques = np.unique(ids_full)
+    if uniques.shape != ids_full.shape:
+        raise ValueError("Have non-unique particle IDs")
 
 
 
-print(indent+f"double sml_init[{size}] = {{")
-for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
-    for i in range(count):
-        if i == count - 1 and is_last:
-            comma = ""
-        else:
-            comma = ","
+    out.write(indent+f"IC.sml_init = {{\n")
+    for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
+        for i in range(count):
+            if i == count - 1 and is_last:
+                comma = "\n"
+            else:
+                comma = ",\n"
 
-        s = sml_ic[mask][i]
-        print(indent+f"  {s}" + comma)
+            s = sml_ic[mask][i]
+            out.write(indent+f"  {s}" + comma)
 
-print(indent+"};")
-print()
+    out.write(indent+"};\n\n")
 
-print(indent+f"double sml_solution[{size}] = {{")
-for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
-    for i in range(count):
-        if i == count - 1 and is_last:
-            comma = ""
-        else:
-            comma = ","
+    out.write(indent+f"double sml_solution[{size}] = {{")
+    for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
+        for i in range(count):
+            if i == count - 1 and is_last:
+                comma = "\n"
+            else:
+                comma = ",\n"
 
-        s = sml_python[mask][i]
-        print(indent+f"  {s}" + comma)
+            s = sml_python[mask][i]
+            out.write(indent+f"  {s}" + comma)
 
-print(indent+"};")
-print()
+    out.write(indent+"};\n\n")
+
+
+
+    out.write(indent+"return IC;\n")
+
+    out.close()
+    print("Written to", outname)
 

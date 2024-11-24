@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
 
-# -------------------------------------------
-# Extract and print data for unit test
-# -------------------------------------------
+# ------------------------------------------------------------
+# Extract and print data for smoothinglength unit test
+#
+# Intended to be run in Peano/tests/swift2/test-smoothing-length-computation/test-smoothing-length-computation-1D
+# Just comment/uncomment file you want to run, kernel to use, etc etc
+# ------------------------------------------------------------
 
 
 import h5py
@@ -24,10 +27,9 @@ h_tolerance = 1.e-12
 kernel = "quartic_spline_vectorized"
 ndim = 1
 
-eta = 2.5819884616099626
-nneigh = swift2.sphtools.number_of_neighbours_from_eta(
-    eta, kernel=kernel, ndim=ndim
-    )
+# target number of neighbours
+nneigh = [3, 5, 10]
+
 
 # start and end of indexes of particle array to take
 x_start = 0.75
@@ -39,8 +41,6 @@ x_end = 0.9
 print(" --- IC file:                    ", file)
 print(" --- Dimensions:                 ", ndim)
 print(" --- SPH Kernel:                 ", kernel)
-print(" --- Target number of neighbours:", nneigh)
-print(" --- Target eta:                 ", eta)
 print(" --- h tolerance:                ", h_tolerance)
 
 
@@ -54,6 +54,8 @@ coords = gas["Coordinates"][:]
 ids = gas["ParticleIDs"][:]
 sml_ic = gas["SmoothingLength"][:]
 random_seed = f["Header"].attrs["RandomSeed"]
+max_displacement = f["Header"].attrs["MaxDisplacement"]
+numpy_version = f["Header"].attrs["NumpyVersion"]
 f.close()
 
 
@@ -73,121 +75,131 @@ coords = coords[sort_ic]
 sml_ic = sml_ic[sort_ic]
 
 
+# Main loop
+for n in nneigh:
+
+    eta = swift2.sphtools.eta_from_number_of_neighbours(n, kernel=kernel, ndim=ndim)
+
+    print(" --- Starting run for:")
+    print("     Target number of neighbours:", n)
+    print("     Target eta:                 ", eta)
+
+    outname = f"solution_n={n}-" + file.strip(".hdf5") + ".dat"
+
+    out = open(outname, "w")
 
 
-# Get expected results
-# -------------------------
+    # Get expected results
+    # -------------------------
 
-tree = KDTree(coords)
-distances, indexes = tree.query(coords, k=2*nneigh + 10 * ndim)
-neighbours = coords[indexes]
+    tree = KDTree(coords)
+    distances, indexes = tree.query(coords, k=2*n + 10 * ndim)
+    neighbours = coords[indexes]
 
-npart = coords.shape[0]
-sml_python = np.zeros((npart))
-
-
-def sml_search(i):
-    # the KDTree returns the particle itself as a neighbour too.
-    # it is stored at the first index, with distance 0.
-    xp = neighbours[i, 0, :]
-    xn = neighbours[i, 1:, :]
-
-    verb = False
-    h = swift2.sphtools.find_smoothing_length(
-        xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=verb
-    )
-    return h
+    npart = coords.shape[0]
+    sml_python = np.zeros((npart))
 
 
-pool = multiprocessing.Pool()
-sml_python[:] = pool.map(sml_search, (i for i in range(npart)))
+    def sml_search(i):
+        # the KDTree returns the particle itself as a neighbour too.
+        # it is stored at the first index, with distance 0.
+        xp = neighbours[i, 0, :]
+        xn = neighbours[i, 1:, :]
+
+        verb = False
+        h = swift2.sphtools.find_smoothing_length(
+            xp, xn, kernel=kernel, eta=eta, h_tolerance=h_tolerance, ndim=ndim, verbose=verb
+        )
+        return h
 
 
-indent = "      "
-size = ids.shape[0]
-print("=================================================================")
+    pool = multiprocessing.Pool()
+    sml_python[:] = pool.map(sml_search, (i for i in range(npart)))
 
 
-print()
-filepath = os.path.join(os.getcwd(), file)
-if filepath.startswith("/home/mivkov/Durham/"):
-    filepath = filepath[len("/home/mivkov/Durham/"):]
-print(indent+"// File: " + filepath)
-print(indent+f"// Random Seed: {random_seed}")
-print(indent+f"// Kernel: {kernel}")
-print(indent+f"// IC particle position start: {x_start}")
-print(indent+f"// IC particle position end: {x_end}")
-print()
+    indent = "  "
+    size = ids.shape[0]
 
-print(indent+f"int sampleSize = {size};")
-print()
-print(indent+f"int indexBegin = 10;")
-print(indent+f"int indexEnd = {size-10};")
-print()
-print(indent+f"double h_tolerance = {h_tolerance};")
-print(indent+f"double resolution_eta = {eta};")
-print()
-print(indent+f"double h_min = {sml_python.min()};")
-print(indent+f"double h_max = {sml_python.max()};")
-print()
-print(indent+f"double coords[{size}][3] = {{")
-
-for i in range(coords.shape[0]):
-    if i != size - 1:
-        comma = ","
-    else:
-        comma = ""
-
-    c = coords[i]
-    if c.shape[0] == 1:
-        print(indent+f"  {{ {c[0]:14.8e}, 0., 0. }}" + comma)
-    elif c.shape[0] == 2:
-        print(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, 0. }}" + comma)
-    elif c.shape[0] == 3:
-        print(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, {c[2]:14.8e} }}" + comma)
-
-print(indent+"};")
-print()
-print()
-
-print(indent+f"int ids[{size}] = {{")
-#  for i in range(index_start, size):
-for i in range(coords.shape[0]):
-    if i != size - 1:
-        comma = ","
-    else:
-        comma = ""
-    c = ids[i]
-    print(indent+f"  {c}" + comma)
-
-print(indent+"};")
-print()
-print()
+    out.write("\n")
+    out.write(indent+"struct InitialConditions IC;\n\n")
+    out.write(indent+f'IC.name = "{outname}";\n\n')
 
 
+    filepath = os.path.join(os.getcwd(), file)
+    if filepath.startswith("/home/mivkov/Durham/"):
+        filepath = filepath[len("/home/mivkov/Durham/"):]
+    out.write(indent+f"// File: {filepath}\n")
+    out.write(indent+f"// Random Seed: {random_seed}\n")
+    out.write(indent+f"// Kernel: {kernel}\n")
+    out.write(indent+f"// Numpy version: {numpy_version}\n")
+    out.write(indent+f"// Max displacement: {max_displacement}\n")
+    out.write(indent+f"// IC particle position start: {x_start}\n")
+    out.write(indent+f"// IC particle position end: {x_end}\n\n")
 
-print(indent+f"double sml_init[{size}] = {{")
-for i in range(coords.shape[0]):
-    if i != size - 1:
-        comma = ","
-    else:
-        comma = ""
-    s = sml_ic[i]
-    print(indent+f"  {s}" + comma)
+    out.write(indent+f"IC.sampleSize = {size};\n\n")
 
-print(indent+"};")
-print()
+    out.write(indent+f"IC.indexBegin = 10;\n")
+    out.write(indent+f"IC.indexEnd = {size-10};\n\n")
 
-print(indent+f"double sml_solution[{size}] = {{")
-for i in range(coords.shape[0]):
-    if i != size - 1:
-        comma = ","
-    else:
-        comma = ""
-    s = sml_python[i]
-    print(indent+f"  {s}" + comma)
+    out.write(indent+f"IC.h_tolerance = {h_tolerance};\n")
+    out.write(indent+f"IC.resolution_eta = {eta};\n\n")
 
-print(indent+"};")
-print()
+    out.write(indent+f"IC.h_min = {sml_python.min()};\n")
+    out.write(indent+f"IC.h_max = {sml_python.max()};\n\n")
 
+    out.write(indent+f"IC.coords = {{\n")
+
+    for i in range(coords.shape[0]):
+        if i != size - 1:
+            comma = ",\n"
+        else:
+            comma = "\n"
+
+        c = coords[i]
+        if c.shape[0] == 1:
+            out.write(indent+f"  {{ {c[0]:14.8e}, 0., 0. }}" + comma)
+        elif c.shape[0] == 2:
+            out.write(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, 0. }}" + comma)
+        elif c.shape[0] == 3:
+            out.write(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, {c[2]:14.8e} }}" + comma)
+
+    out.write(indent+"};\n\n")
+
+    out.write(indent+f"IC.ids = {{\n")
+    for i in range(coords.shape[0]):
+        if i != size - 1:
+            comma = ",\n"
+        else:
+            comma = "\n"
+        c = ids[i]
+        out.write(indent+f"  {c}" + comma)
+
+    out.write(indent+"};\n\n")
+
+    out.write(indent+f"IC.sml_init = {{\n")
+    for i in range(coords.shape[0]):
+        if i != size - 1:
+            comma = ",\n"
+        else:
+            comma = "\n"
+        s = sml_ic[i]
+        out.write(indent+f"  {s}" + comma)
+
+    out.write(indent+"};\n\n")
+
+    out.write(indent+f"IC.sml_solution = {{\n")
+    for i in range(coords.shape[0]):
+        if i != size - 1:
+            comma = ",\n"
+        else:
+            comma = "\n"
+        s = sml_python[i]
+        out.write(indent+f"  {s}" + comma)
+
+    out.write(indent+"};\n\n")
+
+    out.write(indent+"return IC;\n")
+
+    out.close()
+    print("Written to", outname)
 
