@@ -11,8 +11,8 @@ AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: DontAlign
 AlignOperands:   Align
 AlignTrailingComments: true
-AllowAllArgumentsOnNextLine: true
-AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortEnumsOnASingleLine: true
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
@@ -23,7 +23,7 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: Yes
+AlwaysBreakTemplateDeclarations: false
 AttributeMacros:
   - __capability
 BinPackArguments: false
@@ -49,15 +49,15 @@ BraceWrapping:
   SplitEmptyNamespace: true
 BreakBeforeBinaryOperators: All
 BreakBeforeConceptDeclarations: true
-BreakBeforeBraces: Allman # Attach
+BreakBeforeBraces: Attach
 BreakBeforeInheritanceComma: false
 BreakInheritanceList: AfterColon
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
 BreakConstructorInitializers: AfterColon
 BreakAfterJavaFieldAnnotations: false
-BreakStringLiterals: true
-ColumnLimit:     120
+BreakStringLiterals: false
+ColumnLimit:     80
 CommentPragmas:  '^ IWYU pragma:'
 QualifierAlignment: Left
 CompactNamespaces: false
@@ -83,67 +83,17 @@ IfMacros:
   - KJ_IF_MAYBE
 IncludeBlocks:   Regroup
 IncludeCategories:
-IncludeCategories:
-  - Regex:           '"StdAfx.(h|hpp)"' # 0 /
+  - Regex:           '"StdAfx.(h|hpp)"'
     Priority:        -1
     SortPriority:    -1
     CaseSensitive:   false
-  - Regex:           '<[^/]*>' # 0 /
-    Priority:        1
-    SortPriority:    1
-    CaseSensitive:   false
-  - Regex:           '<[^/]+/[^/]+>' # 1 /
-    Priority:        1
+  - Regex:           '<*>'
+    Priority:        2
     SortPriority:    2
     CaseSensitive:   false
-  - Regex:           '<([^/]+/){2}[^/]+>' # 2 /
-    Priority:        1
+  - Regex:           '"*"'
+    Priority:        3
     SortPriority:    3
-    CaseSensitive:   false
-  - Regex:           '<([^/]+/){3}[^/]+>' # 3 /
-    Priority:        1
-    SortPriority:    4
-    CaseSensitive:   false
-  - Regex:           '<([^/]+/){4}[^/]+>' # 4 /
-    Priority:        1
-    SortPriority:    5
-    CaseSensitive:   false
-  - Regex:           '<([^/]+/){5}[^/]+>' # 5 /
-    Priority:        1
-    SortPriority:    6
-    CaseSensitive:   false
-  - Regex:           '<([^/]+/){6,}[^/]+>' # 6 and up /
-    Priority:        1
-    SortPriority:    7
-    CaseSensitive:   false
-  - Regex:           '"[^/]*"' # 0 /
-    Priority:        2
-    SortPriority:    8
-    CaseSensitive:   false
-    CaseSensitive:   false
-  - Regex:           '"[^/]+/[^/]+"' # 1 /
-    Priority:        2
-    SortPriority:    10
-    CaseSensitive:   false
-  - Regex:           '"([^/]+/){2}[^/]+"' # 2 /
-    Priority:        2
-    SortPriority:    11
-    CaseSensitive:   false
-  - Regex:           '"([^/]+/){3}[^/]+"' # 3 /
-    Priority:        2
-    SortPriority:    12
-    CaseSensitive:   false
-  - Regex:           '"([^/]+/){4}[^/]+"' # 4 /
-    Priority:        2
-    SortPriority:    13
-    CaseSensitive:   false
-  - Regex:           '"([^/]+/){5}[^/]+"' # 5 /
-    Priority:        2
-    SortPriority:    14
-    CaseSensitive:   false
-  - Regex:           '"([^/]+/){6,}[^/]+"' # 6 and up /
-    Priority:        2
-    SortPriority:    15
     CaseSensitive:   false
 IncludeIsMainRegex: '(_test)?$'
 IncludeIsMainSourceRegex: ''
@@ -165,7 +115,7 @@ KeepEmptyLinesAtTheStartOfBlocks: true
 LambdaBodyIndentation: Signature
 MacroBlockBegin: ''
 MacroBlockEnd:   ''
-MaxEmptyLinesToKeep: 1
+MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
 ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 2
@@ -180,7 +130,7 @@ PenaltyBreakOpenParenthesis: 0
 PenaltyBreakString: 100
 PenaltyBreakTemplateDeclaration: 100
 PenaltyExcessCharacter: 1000
-PenaltyReturnTypeOnItsOwnLine: 10000
+PenaltyReturnTypeOnItsOwnLine: 20000
 PenaltyIndentedWhitespace: 100
 PointerAlignment: Left
 PPIndentWidth:   -1
@@ -216,9 +166,8 @@ SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
 SpacesInAngles:  Never
 SpacesInConditionalStatement: false
-SpacesInContainerLiterals: true
-SpacesInCStyleCastParentheses: false
 SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
 SpacesInLineCommentPrefix:
   Minimum:         1
   Maximum:         -1
@@ -232,7 +181,7 @@ StatementAttributeLikeMacros:
 StatementMacros:
   - Q_UNUSED
   - QT_REQUIRE_VERSION
-TabWidth:        4
+TabWidth:        2
 UseCRLF:         false
 UseTab:          Never
 WhitespaceSensitiveMacros:
