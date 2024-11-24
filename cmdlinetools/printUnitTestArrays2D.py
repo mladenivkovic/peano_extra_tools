@@ -57,9 +57,6 @@ numpy_version = f["Header"].attrs["NumpyVersion"]
 f.close()
 
 
-f.close()
-
-
 # Sort by particle ID
 sort_ic = np.argsort(ids)
 ids = ids[sort_ic]
@@ -87,9 +84,6 @@ outer_mask = np.logical_and(outer_mask, coords[:, 0] < 0.5 * boxsize + dx_outer)
 outer_mask = np.logical_and(outer_mask, coords[:, 1] > 0.5 * boxsize - dx_outer)
 outer_mask = np.logical_and(outer_mask, coords[:, 1] < 0.5 * boxsize + dx_outer)
 
-count_inner = np.count_nonzero(inner_mask)
-count_outer = np.count_nonzero(outer_mask)
-
 
 outer_mask = np.logical_and(outer_mask, np.logical_not(inner_mask))
 
@@ -115,9 +109,23 @@ size = count_inner + count_outer
 
 
 # Filter out unwanted particles
-ids = ids[mask_full]
-coords = coords[mask_full,:]
-sml_ic = sml_ic[mask_full]
+# Sort the outer particles first, and the inner particles last
+ids_copy = ids.copy()
+ids = np.zeros(size, dtype=int)
+ids[:count_outer] = ids_copy[outer_mask]
+ids[count_outer:] = ids_copy[inner_mask]
+
+coords_copy = coords.copy()
+coords = np.zeros((size,3))
+coords[:count_outer,:] = coords_copy[outer_mask,:]
+coords[count_outer:,:] = coords_copy[inner_mask,:]
+
+sml_ic_copy = sml_ic.copy()
+sml_ic = np.zeros(size)
+sml_ic[:count_outer] = sml_ic_copy[outer_mask]
+sml_ic[count_outer:] = sml_ic_copy[inner_mask]
+
+
 
 # Now that we've filtered out unwanted particles, refresh the masks
 # to fit into the new array sizes
@@ -196,8 +204,8 @@ for n in nneigh:
 
     out.write(indent+f"IC.sampleSize = {size};\n\n")
 
-    out.write(indent+f"IC.indexBegin = 10;\n")
-    out.write(indent+f"IC.indexEnd = {size-10};\n\n")
+    out.write(indent+f"IC.indexBegin = {count_outer};\n")
+    out.write(indent+f"IC.indexEnd = {size};\n\n")
 
     out.write(indent+f"IC.h_tolerance = {h_tolerance};\n")
     out.write(indent+f"IC.resolution_eta = {eta};\n\n")
