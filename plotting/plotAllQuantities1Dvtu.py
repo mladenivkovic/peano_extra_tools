@@ -18,6 +18,7 @@ from peano4.toolbox.particles.postprocessing.ParticleVTUReader import (
 import peano_extra_tools as pet
 
 import metalmaps
+
 metalmaps.set_color_cycle(metalmaps.paranoid_r)
 
 partData = pet.get_particle_data_from_time_or_vtufile()

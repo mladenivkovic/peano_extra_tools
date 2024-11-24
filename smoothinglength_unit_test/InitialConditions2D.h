@@ -21,6 +21,4 @@ namespace initialConditions {
   struct InitialConditions getMultilevelDisplaced2DIC_20neighbours(void);
 
 
-
-
 } // namespace initialConditions

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 
 
 // #include "myconfig.h"
@@ -15,7 +15,6 @@
 // #include "tarch/tarch.h"
 
 
-
 namespace smlUnitTest {
 
   using hydroPart = tests::swift2::testSML1D::globaldata::HydroPart;
@@ -24,7 +23,10 @@ namespace smlUnitTest {
   /**
    * Set some global/static parameters.
    */
-  void setStaticParams(int dimension, struct initialConditions::InitialConditions ic);
+  void setStaticParams(
+    int                                         dimension,
+    struct initialConditions::InitialConditions ic
+  );
 
 
   /**
@@ -36,7 +38,9 @@ namespace smlUnitTest {
   /**
    * Generate particles, and return list of pointers to them.
    **/
-  std::vector<hydroPart*> initParticles(struct initialConditions::InitialConditions ic);
+  std::vector<hydroPart*> initParticles(
+    struct initialConditions::InitialConditions ic
+  );
 
 
   /**
@@ -59,6 +63,12 @@ namespace smlUnitTest {
    * @param verbose if true, print additional info to screen
    * @param abort_on_error if true, abort on first error
    */
-  void runTest(struct initialConditions::InitialConditions ic, int dimension, bool check_all, bool verbose, bool abort_on_error);
+  void runTest(
+    struct initialConditions::InitialConditions ic,
+    int                                         dimension,
+    bool                                        check_all,
+    bool                                        verbose,
+    bool                                        abort_on_error
+  );
 
 } // namespace smlUnitTest

@@ -33,7 +33,6 @@ zorder_peano = 3
 zorder_swift = 1
 
 
-
 import sys
 import os
 import matplotlib
@@ -45,6 +44,7 @@ from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVT
 
 #  plt.style.use("seaborn")
 import metalmaps
+
 metalmaps.set_color_cycle(metalmaps.paranoid)
 
 # Parameters

@@ -16,17 +16,14 @@ from peano4.toolbox.particles.postprocessing.ParticleVTUReader import ParticleVT
 import swift2.sphtools
 
 
-
 #  file = "test_sml_1D.hdf5"
 file = "test_sml_multiscale_1D.hdf5"
-h_tolerance = 1.e-6
+h_tolerance = 1.0e-6
 kernel = "quartic_spline"
 ndim = 1
 
 eta = 2.5819884616099626
-nneigh = swift2.sphtools.number_of_neighbours_from_eta(
-    eta, kernel=kernel, ndim=ndim
-    )
+nneigh = swift2.sphtools.number_of_neighbours_from_eta(eta, kernel=kernel, ndim=ndim)
 
 # start and end of indexes of particle array to take
 index_start = 0
@@ -34,8 +31,6 @@ index_end = 4000
 #  index_start = 800
 #  index_end = 850
 size = index_end - index_start
-
-
 
 
 print(" --- IC file:                    ", file)
@@ -98,19 +93,19 @@ print("=================================================================")
 print()
 filepath = os.path.join(os.getcwd(), file)
 if filepath.startswith("/home/mivkov/Durham/"):
-    filepath = filepath[len("/home/mivkov/Durham/"):]
-print(indent+"// File: " + filepath)
-print(indent+f"// Random Seed: {random_seed}")
-print(indent+f"// IC particle index start: {index_start}")
-print(indent+f"// IC particle index end: {index_end}")
+    filepath = filepath[len("/home/mivkov/Durham/") :]
+print(indent + "// File: " + filepath)
+print(indent + f"// Random Seed: {random_seed}")
+print(indent + f"// IC particle index start: {index_start}")
+print(indent + f"// IC particle index end: {index_end}")
 print()
 
-print(indent+f"int sampleSize = {size};")
+print(indent + f"int sampleSize = {size};")
 print()
-print(indent+f"int indexBegin = 10;")
-print(indent+f"int indexEnd = {size-10};")
+print(indent + f"int indexBegin = 10;")
+print(indent + f"int indexEnd = {size-10};")
 print()
-print(indent+f"double coords[{size}][3] = {{")
+print(indent + f"double coords[{size}][3] = {{")
 #  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
     if i != index_end - 1:
@@ -120,17 +115,17 @@ for i in range(coords.shape[0]):
 
     c = coords[i]
     if c.shape[0] == 1:
-        print(indent+f"  {{ {c[0]:14.8e}, 0., 0. }}" + comma)
+        print(indent + f"  {{ {c[0]:14.8e}, 0., 0. }}" + comma)
     elif c.shape[0] == 2:
-        print(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, 0. }}" + comma)
+        print(indent + f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, 0. }}" + comma)
     elif c.shape[0] == 3:
-        print(indent+f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, {c[2]:14.8e} }}" + comma)
+        print(indent + f"  {{ {c[0]:14.8e}, {c[1]:14.8e}, {c[2]:14.8e} }}" + comma)
 
-print(indent+"};")
+print(indent + "};")
 print()
 print()
 
-print(indent+f"int ids[{size}] = {{")
+print(indent + f"int ids[{size}] = {{")
 #  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
     if i != index_end - 1:
@@ -138,15 +133,14 @@ for i in range(coords.shape[0]):
     else:
         comma = ""
     c = ids[i]
-    print(indent+f"  {c}" + comma)
+    print(indent + f"  {c}" + comma)
 
-print(indent+"};")
+print(indent + "};")
 print()
 print()
 
 
-
-print(indent+f"double sml_init[{size}] = {{")
+print(indent + f"double sml_init[{size}] = {{")
 #  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
     if i != index_end - 1:
@@ -154,12 +148,12 @@ for i in range(coords.shape[0]):
     else:
         comma = ""
     s = sml_ic[i]
-    print(indent+f"  {s}" + comma)
+    print(indent + f"  {s}" + comma)
 
-print(indent+"};")
+print(indent + "};")
 print()
 
-print(indent+f"double sml_solution[{size}] = {{")
+print(indent + f"double sml_solution[{size}] = {{")
 #  for i in range(index_start, index_end):
 for i in range(coords.shape[0]):
     if i != index_end - 1:
@@ -167,9 +161,7 @@ for i in range(coords.shape[0]):
     else:
         comma = ""
     s = sml_python[i]
-    print(indent+f"  {s}" + comma)
+    print(indent + f"  {s}" + comma)
 
-print(indent+"};")
+print(indent + "};")
 print()
-
-

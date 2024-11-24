@@ -8,9 +8,9 @@ namespace initialConditions {
   struct InitialConditions {
 
     std::string name;
-    int sampleSize;
-    int indexBegin;
-    int indexEnd;
+    int         sampleSize;
+    int         indexBegin;
+    int         indexEnd;
 
     double h_tolerance;
     double resolution_eta;
@@ -25,6 +25,5 @@ namespace initialConditions {
     std::vector<double> sml_init;
 
     std::vector<double> sml_solution;
-
   };
 } // namespace initialConditions
