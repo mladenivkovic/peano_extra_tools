@@ -72,26 +72,28 @@ sml_ic = sml_ic[sort_ic]
 # This is so that I don't have to modify the unit tests.
 
 
-dx_inner = 0.2
-dx_outer = 0.4
+dx_inner = 0.15
+dx_outer = 0.3
 
 
 
-inner_mask = coords[:, 0] > 0.5 * boxsize - dx_inner
-inner_mask = np.logical_and(inner_mask, coords[:, 0] < 0.5 * boxsize + dx_inner)
-inner_mask = np.logical_and(inner_mask, coords[:, 1] > 0.5 * boxsize - dx_inner)
-inner_mask = np.logical_and(inner_mask, coords[:, 1] < 0.5 * boxsize + dx_inner)
+inner_mask = coords[:, 0] > (0.5 * boxsize - dx_inner)
+inner_mask = np.logical_and(inner_mask, coords[:, 0] < (0.5 * boxsize + dx_inner))
+inner_mask = np.logical_and(inner_mask, coords[:, 1] > (0.5 * boxsize - dx_inner))
+inner_mask = np.logical_and(inner_mask, coords[:, 1] < (0.5 * boxsize + dx_inner))
 
 outer_mask = coords[:, 0] > 0.5 * boxsize - dx_outer
 outer_mask = np.logical_and(outer_mask, coords[:, 0] < 0.5 * boxsize + dx_outer)
 outer_mask = np.logical_and(outer_mask, coords[:, 1] > 0.5 * boxsize - dx_outer)
 outer_mask = np.logical_and(outer_mask, coords[:, 1] < 0.5 * boxsize + dx_outer)
 
+count_inner = np.count_nonzero(inner_mask)
+count_outer = np.count_nonzero(outer_mask)
+
+
 outer_mask = np.logical_and(outer_mask, np.logical_not(inner_mask))
 
 mask_full = np.logical_or(inner_mask, outer_mask)
-
-
 
 #  from matplotlib import  pyplot as plt
 #  plt.figure()
@@ -100,9 +102,7 @@ mask_full = np.logical_or(inner_mask, outer_mask)
 #  plt.subplot(122)
 #  plt.scatter(coords[outer_mask, 0], coords[outer_mask, 1], c='r')
 #  plt.show()
-#
 #  quit()
-
 
 
 count_inner = np.count_nonzero(inner_mask)
@@ -264,7 +264,7 @@ for n in nneigh:
 
     out.write(indent+"};\n\n")
 
-    out.write(indent+f"double sml_solution[{size}] = {{")
+    out.write(indent+f"IC.sml_solution = {{")
     for mask, count, is_last in [(inner_mask, count_inner, False), (outer_mask, count_outer, True)]:
         for i in range(count):
             if i == count - 1 and is_last:
