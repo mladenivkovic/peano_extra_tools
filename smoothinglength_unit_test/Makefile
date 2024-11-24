@@ -1,6 +1,7 @@
 PEANO_ROOT=/home/mivkov/Durham/Peano/src
 
-CXX = /home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/gcc-14.0.1/intel-oneapi-compilers-2024.2.1-ysaj6erxyjcz2c3mvqd6pv2eyt3b3suu/compiler/2024.2/bin/icpx
+# CXX = /home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/gcc-14.0.1/intel-oneapi-compilers-2024.2.1-ysaj6erxyjcz2c3mvqd6pv2eyt3b3suu/compiler/2024.2/bin/icpx
+CXX = /home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/gcc-14.2.0/intel-oneapi-compilers-2025.0.0-wxo2qwrcpg62uup55jgd4ivercusmyfg/compiler/2025.0/bin/icpx
 
 OPTFLAGS = -Og -g 			# debug
 # OPTFLAGS += -fsanitize=address
@@ -15,7 +16,7 @@ INCLUDES+=-I/$(PEANO_ROOT)/
 
 
 # LDFLAGS=-L/$(PEANO_ROOT)
-LDFLAGS += -L/home/mivkov/Durham/Peano/src  -L/home/mivkov/Durham/Peano/src/toolbox/loadbalancing  -L/home/mivkov/Durham/Peano/src/toolbox/blockstructured  -L/home/mivkov/Durham/Peano/src/toolbox/particles  -L/home/mivkov/Durham/Peano/src/swift2 -L//home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/oneapi-2024.2.1/hdf5-1.14.3-pu54c7mxajmoxbye2gqeiah2vg4huaqq/lib -qopenmp
+LDFLAGS += -L/home/mivkov/Durham/Peano/src  -L/home/mivkov/Durham/Peano/src/toolbox/loadbalancing  -L/home/mivkov/Durham/Peano/src/toolbox/blockstructured  -L/home/mivkov/Durham/Peano/src/toolbox/particles  -L/home/mivkov/Durham/Peano/src/swift2 -L/$(HDF5_ROOT)/lib -qopenmp
 LDFLAGS += -L/home/mivkov/Durham/Peano/src/tarch
 LDFLAGS += -L/home/mivkov/Durham/Peano/src/tarch/la
 
