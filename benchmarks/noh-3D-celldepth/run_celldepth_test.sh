@@ -31,7 +31,7 @@ PLOT_DELTA=0.01
 # will skip running experiment if outputfile already exists
 REDO="false"
 
-for N_PART in 32 64 128; do
+for N_PART in 20 32; do
     for CELL_SIZE_MAX in 2 0.67 0.23; do
         for CELL_SIZE_MIN in 2 0.67 0.23 0.075 0.025; do
 
@@ -49,7 +49,7 @@ for N_PART in 32 64 128; do
                 echo COMPILING N_PART=$N_PART CELL_MAX=$CELL_SIZE_MAX CELL_MIN=$CELL_SIZE_MIN
                 python3 noh.py -np $N_PART -et $END_TIME -dt $TIMESTEP_SIZE -cfl $CFL_FACTOR -plot $PLOT_DELTA --cell-size-max $CELL_SIZE_MAX --cell-size-min $CELL_SIZE_MIN > /dev/null
                 # rename exec
-                mv noh2D $EXEC
+                mv noh3D $EXEC
             fi
 
             if [[ "$REDO" != "false" ]] || [[ ! -f "$OUTFILE" ]]; then

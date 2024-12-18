@@ -226,8 +226,8 @@ for n, npart in enumerate(npartlist):
     walltimes = [ d.walltime for d in data ]
     timestepping = [ d.timestepping for d in data ]
 
-    ax.plot(xvals, walltimes, marker=markers[n], label="walltime "+str(npart)+r"$^2$", linestyle="-", c="C"+str(n))
-    ax.plot(xvals, timestepping, marker=markers[n], label="timestepping "+str(npart)+r"$^2$", linestyle="--", c="C"+str(n))
+    ax.plot(xvals, walltimes, marker=markers[n], label="walltime "+str(npart)+r"$^3$", linestyle="-", c="C"+str(n))
+    ax.plot(xvals, timestepping, marker=markers[n], label="timestepping "+str(npart)+r"$^3$", linestyle="--", c="C"+str(n))
 
 
 ax.set_xlabel("cell_size_max/cell_size_min")
