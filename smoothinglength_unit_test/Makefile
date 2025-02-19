@@ -1,7 +1,8 @@
 PEANO_ROOT=/home/mivkov/Durham/Peano/src
 
 # CXX = /home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/gcc-14.0.1/intel-oneapi-compilers-2024.2.1-ysaj6erxyjcz2c3mvqd6pv2eyt3b3suu/compiler/2024.2/bin/icpx
-CXX = /home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/gcc-14.2.0/intel-oneapi-compilers-2025.0.0-wxo2qwrcpg62uup55jgd4ivercusmyfg/compiler/2025.0/bin/icpx
+# CXX = /home/mivkov/local/spack/opt/spack/linux-ubuntu24.04-icelake/gcc-14.2.0/intel-oneapi-compilers-2025.0.0-wxo2qwrcpg62uup55jgd4ivercusmyfg/compiler/2025.0/bin/icpx
+CXX = /home/mivkov/software/spack/opt/spack/linux-manjaro25-icelake/gcc-14.2.1/intel-oneapi-compilers-2025.0.0-t7hlf6ekexsd7uvpxsr33orr7wnbewzp/compiler/2025.0/bin/icpx
 
 OPTFLAGS = -Og -g 			# debug
 # OPTFLAGS += -fsanitize=address
